@@ -160,6 +160,7 @@
           <div class="dropdown-menu {{ request()->routeIs('admin.info.profile', 'admin.info.family_details', 'admin.department', 'admin.designation', 'admin.overtime','admin.employee','admin.employee.attendance') ? 'show' : '' }}">
               <div class="dropdown-menu-columns">
                   <div class="dropdown-menu-column">
+                      <a class="dropdown-item {{ request()->routeIs('employee.overview') ? 'active' : '' }}" href="{{ route('employee.overview') }}">Overview</a>
                       <a class="dropdown-item {{ request()->routeIs('admin.employee') ? 'active' : '' }}" href="{{ route('admin.employee') }}">Employee List</a>
                       <a class="dropdown-item {{ request()->routeIs('admin.info.profile') ? 'active' : '' }}" href="{{ route('admin.info.profile') }}">Employee Profile</a>
                       <a class="dropdown-item {{ request()->routeIs('admin.info.family_details') ? 'active' : '' }}" href="{{ route('admin.info.family_details') }}">Family Details</a>
@@ -171,6 +172,17 @@
               </div>
           </div>
       </li>
+      <li class="nav-item">
+        <a class="nav-link {{ request()->routeIs('portal.tasks') ? 'active' : '' }}"  href="{{route('portal.tasks')}}" >
+          <span class="nav-link-icon d-md-none d-lg-inline-block"><!-- Download SVG icon from http://tabler-icons.io/i/home -->
+            <i class="fa fa-tasks"></i>
+          </span>
+          <span class="nav-link-title">
+            Task
+          </span>
+        </a>
+      </li>
+
       <li class="nav-item">
         <a class="nav-link {{ request()->routeIs('admin.client') ? 'active' : '' }}"  href="{{route('admin.client')}}" >
           <span class="nav-link-icon d-md-none d-lg-inline-block"><!-- Download SVG icon from http://tabler-icons.io/i/home -->

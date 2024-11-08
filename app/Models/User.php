@@ -9,6 +9,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use App\Models\Department;
 use App\Models\Salary;
+use App\Models\Task;
 
 class User extends Authenticatable
 {
@@ -96,7 +97,11 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Department::class);
     }
-
+    
+    public function tasks()
+    {
+        return $this->hasMany(Task::class, 'assigned_to');
+    }
     /**
      * The attributes that should be hidden for serialization.
      *

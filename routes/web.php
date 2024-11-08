@@ -29,6 +29,7 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\RazorpayController;
 use App\Http\Controllers\PayrollController;
+use App\Http\Controllers\TaskController;
 
 /*
 |--------------------------------------------------------------------------
@@ -260,6 +261,16 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::get('/trainer/edit/{id}', [TrainerController::class, 'adminTrainerTypeEdit'])->name('admin.trainer.edit');
     Route::POST('/trainer/{id}/update', [TrainerController::class, 'adminTrainerTypeUpdate'])->name('admin.trainer.update');
     Route::delete('/trainer/delete/{id}', [TrainerController::class, 'adminTrainerTypeDelete'])->name('admin.trainer.delete');
+
+   
+ // Portal Tasks
+    Route::get('/portal/tasks', [TaskController::class, 'taskPortal'])->name('portal.tasks');
+    Route::post('/portal/tasks/store', [TaskController::class, 'taskStore'])->name('store.tasks');
+    
+    // Overview
+    Route::get('/employee/overview', [EmployeeController::class, 'overview'])->name('employee.overview');
+    // Route::get('/employee-headcount', [EmployeeController::class, 'getEmployeeHeadCount'])->name('employee.headcount');
+    Route::get('/employee-headcount-monthly', [EmployeeController::class, 'getEmployeeHeadCountByMonth'])->name('employee.headcount.monthly');
 
 });
 

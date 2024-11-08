@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use DB;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
+use Carbon\Carbon;
 
 class EmployeeController extends Controller
 {
@@ -436,5 +437,82 @@ public function storeAddressInfo(Request $request){
         $request->session()->forget('employee');
         return response()->json(['success' => true]);
 }
+
+public function overview(){
+    $oneMonthAgo = Carbon::now()->subMonth();
+    $newJoiners = User::where('created_at', '>=', $oneMonthAgo)->get();
+    $data = $newJoiners->map(function ($user) {
+        return [
+            'name' => $user->firstName . ' ' . $user->lastName,
+            'employee_id' => $user->employee_id,
+            'joined_ago' => $user->created_at->diffForHumans(), // e.g., "1 month ago"
+            'photo_url' => "/path/to/employee/photo/{$user->id}/small", // Adjust photo path as needed
+        ];
+    });
+
+    // Birthday count
+    $today = Carbon::today();
+    $oneWeekFromToday = Carbon::today()->addWeek();
+    $startMonthDay = $today->format('m-d');
+    $endMonthDay = $oneWeekFromToday->format('m-d');
+    
+    $upcomingBirthdays = User::whereNotNull('dob')
+        ->where(function ($query) use ($startMonthDay, $endMonthDay) {
+            // Case 1: If the week doesn't cross into a new year (e.g., Dec 29 - Jan 5)
+            $query->whereBetween(
+                DB::raw("DATE_FORMAT(dob, '%m-%d')"),
+                [$startMonthDay, $endMonthDay]
+            );
+        })
+        ->orderByRaw("DATE_FORMAT(dob, '%m-%d')") // Order by month and day
+        ->get()
+        ->map(function ($user) use ($today) {
+            return [
+                'name' => $user->firstName . ' ' . $user->lastName,
+                'employee_id' => $user->employee_id,
+                'birthday' => $user->dob,
+                'days_until_birthday' => $today->diffInDays(Carbon::parse($user->dob)->setYear($today->year)),
+                'photo_url' => "/path/to/employee/photo/{$user->id}/small", // Adjust photo path as needed
+            ];
+        });
+        // dd($upcomingBirthdays);
+    return view('admin.employee.pages.overview',[
+        'data' => $data,
+        'upcomingBirthdays' => $upcomingBirthdays
+    ]);
+}
+
+public function getEmployeeHeadCountByMonth()
+{
+    // Get all employees (or any specific subset)
+    $employees = User::all();
+    
+    // Map through the employees and get the necessary data
+    $userData = $employees->map(function ($user) {
+        // Check if created_at is not null before formatting
+        if ($user->created_at) {
+            return [
+                'firstName' => $user->firstName,   // Example field
+                'created_at' => $user->created_at->format('Y-m'),  // Format created_at to 'Y-m'
+            ];
+        } else {
+            // If created_at is null, you can return a default value or skip the user
+            return null;  // Or skip this user based on your needs
+        }
+    })->filter();
+    // Group by the 'created_at' (month and year)
+    $headCountByMonth = $userData->groupBy('created_at')->map(function ($group) {
+        return $group->count();  // Get the count of employees for each month
+    });
+    // dd($headCountByMonth);
+
+    // Prepare data for the chart (months and counts)
+    $months = $headCountByMonth->keys()->toArray();  // Get the months
+    $counts = $headCountByMonth->values()->toArray();  // Get the corresponding counts
+
+    return response()->json(['months' => $months, 'counts' => $counts]);
+}
+
+
 
 }
