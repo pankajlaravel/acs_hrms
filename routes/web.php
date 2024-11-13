@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\EmpBankController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
@@ -30,10 +31,12 @@ use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\RazorpayController;
 use App\Http\Controllers\PayrollController;
 use App\Http\Controllers\TaskController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\BankController;
 
 /*
 |--------------------------------------------------------------------------
-| Web Routes 
+| Web Routes  
 |--------------------------------------------------------------------------
 |
 | Here is where you can register web routes for your application. These
@@ -104,6 +107,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::POST('/employee/{id}/update', [EmployeeController::class, 'employeeInfoUpdate'])->name('employees.update');
     Route::delete('/employee/delete/{id}', [EmployeeController::class, 'adminEmployeeDelete'])->name('employees.delete');
     Route::post('/employees/search', [EmployeeController::class, 'ajaxSearch'])->name('employees.ajaxSearch');
+    Route::any('/employees/viewEmployee', [EmployeeController::class, 'viewEmployee'])->name('employees.viewEmployee');
     
     Route::get('/employee/{id}/profile/', [EmployeeController::class, 'adminEmployeeView'])->name('admin.employee.view');
 
@@ -269,8 +273,49 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     
     // Overview
     Route::get('/employee/overview', [EmployeeController::class, 'overview'])->name('employee.overview');
+    Route::get('/employee/analyticsHub', [EmployeeController::class, 'analyticsHub'])->name('employee.analyticsHub');
+    Route::get('/employee/account/info', [EmployeeController::class, 'bankInfo'])->name('employee.bankInfo');
+    Route::get('/employee/emp-directory', [EmployeeController::class, 'empDirectory'])->name('employee.directory');
+    Route::get('employee/all/info/get', [EmployeeController::class, 'getAllInfo'])->name('employee.all.info.get');
+    Route::get('employee/personal/info/get', [EmployeeController::class, 'getPersonalInfo'])->name('employee.personal.info.get');
     // Route::get('/employee-headcount', [EmployeeController::class, 'getEmployeeHeadCount'])->name('employee.headcount');
     Route::get('/employee-headcount-monthly', [EmployeeController::class, 'getEmployeeHeadCountByMonth'])->name('employee.headcount.monthly');
+    Route::post('/employees/bank/search/', [EmployeeController::class, 'bankSearch'])->name('employees.bankSearch');
+    Route::get('/bank/detail/edit/{id}', [EmpBankController::class, 'employeeBankDetailsEdit'])->name('employeeBankDetailsEdit');
+
+
+    // Emp Bank Details
+    Route::post('/employees/bank/details/', [EmpBankController::class, 'empBankDetail'])->name('employees.empBankDetail');
+    Route::POST('/bank/details/{id}/update', [EmpBankController::class, 'empBankDetailUpdate'])->name('empBankDetailUpdate');
+
+    Route::get('/branches/{bank_id}', [EmpBankController::class, 'getBranches'])->name('branches.get');
+
+
+
+    // Category CRUD
+    Route::get('/category-list', [CategoryController::class, 'categoryList'])->name('category.list');
+    Route::post('/category-list/store', [CategoryController::class, 'categoryStore'])->name('category.store');
+    Route::get('/category-list/edit/{id}', [CategoryController::class, 'categoryEdit'])->name('category.edit');
+    Route::POST('/category-list/{id}/update', [CategoryController::class, 'categoryUpdate'])->name('category.update');
+    Route::delete('/category-list/delete/{id}', [CategoryController::class, 'categoryDelete'])->name('category.delete');
+
+
+    // Bank CRUD
+    Route::get('/bank-list', [BankController::class, 'bankList'])->name('bank.list');
+    Route::post('/bank-list/store', [BankController::class, 'bankStore'])->name('bank.store');
+    Route::get('/bank-list/edit/{id}', [BankController::class, 'bankEdit'])->name('bank.edit');
+    Route::POST('/bank-list/{id}/update', [BankController::class, 'bankUpdate'])->name('bank.update');
+    Route::delete('/bank-list/delete/{id}', [BankController::class, 'bankDelete'])->name('bank.delete');
+
+    // Bank Branch
+    Route::get('/bank-branch-list', [BankController::class, 'bankBranchList'])->name('bank.branch.list');
+    Route::post('/bank-branch-list/store', [BankController::class, 'bankBranchStore'])->name('bank.branch.store');
+    Route::get('/bank-branch-list/edit/{id}', [BankController::class, 'bankBranchEdit'])->name('bank.branch.edit');
+    Route::POST('/bank-branch-list/{id}/update', [BankController::class, 'bankBranchUpdate'])->name('bank.branch.update');
+    Route::delete('/bank-branch-list/delete/{id}', [BankController::class, 'bankBranchDelete'])->name('bank.branch.delete');
+
+    // Get Data In Excel
+    Route::get('/employees/export', [EmployeeController::class, 'exportEmployees'])->name('employees.export');
 
 });
 

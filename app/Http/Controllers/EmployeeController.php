@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Validator;
 use Response;
 use App\Models\User;
+use App\Models\Branch;
+use App\Models\Bank;
 use App\Models\Department;
 use App\Models\Designation;
 use Illuminate\Support\Facades\Hash;
@@ -13,6 +15,9 @@ use Illuminate\Support\Facades\Storage;
 use DB;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
 use Carbon\Carbon;
+use App\Exports\EmployeesExport;
+use Maatwebsite\Excel\Facades\Excel;
+
 
 class EmployeeController extends Controller
 {
@@ -291,6 +296,8 @@ public function adminEmployeeView(Request $request,$id){
 }
 
 public function adminInfoProfile(Request $request){
+    $query = '';
+    $results = '';
     $department = Department::latest()->get();
     $designation = Designation::latest()->get();
     $user_data = User::latest()->first();
@@ -305,11 +312,14 @@ public function adminInfoProfile(Request $request){
     $employee = $request->session()->get('employee');
     // $request->session()->forget('employee');
     // dd($employee);
+   
     return view('admin.employee.profile_info',compact(
         'department',
         'designation',
         'user_data',
         'employee',
+        'query',
+        'results'
     ));
 }
 
@@ -513,6 +523,93 @@ public function getEmployeeHeadCountByMonth()
     return response()->json(['months' => $months, 'counts' => $counts]);
 }
 
+public function analyticsHub(){
+    return view('admin.employee.pages.analyticsHub');
+}
 
+public function getAllInfo(Request $request){
+    // $employees = User::where('role','=','employee')->get();
+    $employees = DB::table('users')
+    ->join('departments','users.department_id','=','departments.id')
+    ->join('designations','users.designation_id','=','designations.id')
+    ->select('users.*','departments.name as departmentName','designations.name as designationsName')
+    ->where('role','=','employee')->get();
+    $status = $request->input('status');
+    $employee_filter = User::query();
+    if ($status) {
+        $employee_filter->where('joining_status', $status);
+    }
+    $filter_data = $employee_filter->get();
+    // dd($filter_data);
+    return response()->json([
+        'employees' => $employees,
+        'filter_data' => $filter_data
+    ]);
+}
+
+public function empDirectory(Request $request){
+    $status = $request->input('status');
+    
+    return view('admin.employee.pages.empDirectory');
+}
+
+public function exportEmployees(Request $request)
+{
+    $status = $request->input('status');  // Get the status filter
+    return Excel::download(new EmployeesExport($status), 'employees.xlsx');
+}
+
+public function viewEmployee(Request $request)
+{
+    // Validate input
+    $query = $request->input('query');
+    $department = Department::latest()->get();
+    $designation = Designation::latest()->get();
+    $user_data = User::latest()->first();
+    $results = DB::table('users')
+    ->join('designations', 'users.designation_id', '=', 'designations.id') // Joining the designations table
+    ->join('departments','users.department_id','=', 'departments.id')
+    ->select('users.*', 'designations.name as position_name','departments.name as departmentName') // Selecting columns from users and designations
+    ->where('users.employee_id', $query) // Check if query is a user ID
+    ->get()->first();
+    // dd($results);
+    // Return the results as a JSON response
+    // return response()->json($results);
+    return view('admin.employee.pages.viewEmployee',[
+        'results' => $results,
+        'department' => $department,
+        'designation' => $designation,
+        'query' => $query
+    ]);
+}
+
+public function bankInfo(){
+    $banks = Bank::latest()->get();
+    $branches = Branch::latest()->get();
+    return view('admin.employee.pages.bankInfo',[
+        'banks' => $banks,
+        'branches' => $branches,
+    ]);
+}
+
+public function bankSearch(Request $request){
+    // Validate input
+    $query = $request->input('query');
+    $emp_id = User::where('employee_id','=',$query)->first();
+    $bankRecord  = DB::table('emp_banks')
+    ->join('users', 'emp_banks.employee_id', '=', 'users.employee_id') // Joining the designations table
+    ->join('banks','emp_banks.bank_id','=','banks.id')
+    ->join('branches','emp_banks.bank_branch_id','=','branches.id')
+    ->select('emp_banks.*','branches.branch_name as branchName','banks.bank_name as bankName','branches.ifsc as ifsc') // Selecting columns from users and designations
+    ->where('emp_banks.employee_id', $query) // Check if query is a user ID
+    ->first();
+
+    // dd($bankRecord);
+    // Return the results as a JSON response
+    return response()->json([
+        'emp_id' => $emp_id,
+        'bankRecord' => $bankRecord
+    ]);
+}
 
 }

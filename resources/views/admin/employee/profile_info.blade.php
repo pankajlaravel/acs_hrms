@@ -53,8 +53,13 @@
                             <span class="input-group-text" id="basic-addon1" style="border-radius: 50px 0px 0px 50px">
                               <i class="fa fa-user" ></i> <!-- Bootstrap user icon -->
                             </span>
+                            @if ($query)
+                            <input required type="search" id="search"  class="form-control custom-radius" placeholder="Search by Emp No/ Name" value="{{$results->firstName.' '.$results->lastName}}"  />
+                            <input  type="hidden" id="search_id" name="query" class="form-control custom-radius" placeholder="Search by Emp No/ Name" value="{{$query}}" />
+                            @else
                             <input required type="search" id="search"  class="form-control custom-radius" placeholder="Search by Emp No/ Name"  />
-                            <input  type="hidden" id="search_id" name="query" class="form-control custom-radius" placeholder="Search by Emp No/ Name"  />
+                            <input  type="hidden" id="search_id" name="query" class="form-control custom-radius" placeholder="Search by Emp No/ Name" />
+                            @endif
                             {{-- <div id="suggestions" class="suggestions" style="position: absolute; z-index: 1000; display: none; background: white; border: 1px solid #ddd;"></div> --}}
                             <button class="btn btn-primary" type="submit" style="border-radius: 0px 50px 50px 0px">
                               <i class="fa fa-search"></i> <!-- Bootstrap search icon -->

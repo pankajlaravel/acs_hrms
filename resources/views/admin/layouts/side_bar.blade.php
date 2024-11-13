@@ -157,10 +157,13 @@
               </span>
               <span class="nav-link-title">Employee</span>
           </a>
-          <div class="dropdown-menu {{ request()->routeIs('admin.info.profile', 'admin.info.family_details', 'admin.department', 'admin.designation', 'admin.overtime','admin.employee','admin.employee.attendance') ? 'show' : '' }}">
+          <div class="dropdown-menu {{ request()->routeIs('admin.info.profile', 'admin.info.family_details', 'admin.department', 'admin.designation', 'admin.overtime','admin.employee','admin.employee.attendance','employee.overview','employee.analyticsHub','employee.directory','employee.bankInfo') ? 'show' : '' }}">
               <div class="dropdown-menu-columns">
                   <div class="dropdown-menu-column">
                       <a class="dropdown-item {{ request()->routeIs('employee.overview') ? 'active' : '' }}" href="{{ route('employee.overview') }}">Overview</a>
+                      <a class="dropdown-item {{ request()->routeIs('eemployee.analyticsHub') ? 'active' : '' }}" href="{{ route('employee.analyticsHub') }}">Analytic Hub</a>
+                      <a class="dropdown-item {{ request()->routeIs('employee.directory') ? 'active' : '' }}" href="{{ route('employee.directory') }}">Employee Directory</a>
+                      <a class="dropdown-item {{ request()->routeIs('employee.bankInfo') ? 'active' : '' }}" href="{{ route('employee.bankInfo') }}">Bank</a>
                       <a class="dropdown-item {{ request()->routeIs('admin.employee') ? 'active' : '' }}" href="{{ route('admin.employee') }}">Employee List</a>
                       <a class="dropdown-item {{ request()->routeIs('admin.info.profile') ? 'active' : '' }}" href="{{ route('admin.info.profile') }}">Employee Profile</a>
                       <a class="dropdown-item {{ request()->routeIs('admin.info.family_details') ? 'active' : '' }}" href="{{ route('admin.info.family_details') }}">Family Details</a>
@@ -182,6 +185,44 @@
           </span>
         </a>
       </li>
+
+      <li class="nav-item dropdown {{ request()->routeIs('admin.employee.invoice', 'admin.provident-fund', 'admin.tax') ? 'show' : '' }}">
+        <a class="nav-link dropdown-toggle {{ request()->routeIs('admin.employee.invoice', 'admin.provident-fund', 'admin.tax') ? 'active' : '' }}" href="#navbar-base" data-bs-toggle="dropdown" data-bs-auto-close="false" role="button" aria-expanded="{{ request()->routeIs('admin.employee.invoice', 'admin.provident-fund', 'admin.tax') ? 'true' : 'false' }}">
+            <span class="nav-link-icon d-md-none d-lg-inline-block">
+                <!-- SVG icon -->
+                <i class="fa fa-list-alt"></i>
+            </span>
+            <span class="nav-link-title">Category</span>
+        </a>
+        <div class="dropdown-menu {{ request()->routeIs('category.list') ? 'show' : '' }}">
+            <div class="dropdown-menu-columns">
+                <div class="dropdown-menu-column">
+                    <a class="dropdown-item {{ request()->routeIs('category.list') ? 'active' : '' }}" href="{{ route('category.list') }}">Category List</a>
+                   
+                </div>
+            </div>
+        </div>
+    </li>
+
+
+    <li class="nav-item dropdown {{ request()->routeIs('bank.list','bank.branch.list') ? 'show' : '' }}">
+      <a class="nav-link dropdown-toggle {{ request()->routeIs('bank.list','bank.branch.list') ? 'active' : '' }}" href="#navbar-base" data-bs-toggle="dropdown" data-bs-auto-close="false" role="button" aria-expanded="{{ request()->routeIs('bank.list','bank.branch.list') ? 'true' : 'false' }}">
+          <span class="nav-link-icon d-md-none d-lg-inline-block">
+              <!-- SVG icon -->
+              <i class="fa fa-bank"></i>
+          </span>
+          <span class="nav-link-title">Bank</span>
+      </a>
+      <div class="dropdown-menu {{ request()->routeIs('bank.list') ? 'show' : '' }}">
+          <div class="dropdown-menu-columns">
+              <div class="dropdown-menu-column">
+                  <a class="dropdown-item {{ request()->routeIs('bank.list') ? 'active' : '' }}" href="{{ route('bank.list') }}">Bnak List</a>
+                  <a class="dropdown-item {{ request()->routeIs('bank.branch.list') ? 'active' : '' }}" href="{{ route('bank.branch.list') }}">Branch List</a>
+                 
+              </div>
+          </div>
+      </div>
+  </li>
 
       <li class="nav-item">
         <a class="nav-link {{ request()->routeIs('admin.client') ? 'active' : '' }}"  href="{{route('admin.client')}}" >
