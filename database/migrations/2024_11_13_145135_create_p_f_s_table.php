@@ -13,14 +13,15 @@ return new class extends Migration
     {
         Schema::create('p_f_s', function (Blueprint $table) {
             $table->id();
-            $table->string('emp_id')->nullable();
-            $table->string('pf_type')->nullable();
-            $table->string('emp_share_amt')->nullable();
-            $table->string('org_share_amt')->nullable();
-            $table->string('emp_share_persant')->nullable();
-            $table->string('org_share_persant')->nullable();
-            $table->text('description')->nullable();
-            $table->integer('status')->default(0);
+            $table->string('employee_id')->nullable();
+            $table->string('uan')->nullable();
+            $table->string('pf_number')->nullable();
+            $table->string('pf_join_date')->nullable();
+            $table->string('family_pf_number')->nullable();
+            $table->string('exits_eps')->nullable();
+            $table->string('allow_eps')->nullable();
+            $table->string('allow_epf')->nullable();
+            $table->string('document_type')->nullable();
             $table->timestamps();
         });
     }

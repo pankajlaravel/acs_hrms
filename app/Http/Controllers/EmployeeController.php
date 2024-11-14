@@ -8,6 +8,8 @@ use Response;
 use App\Models\User;
 use App\Models\Branch;
 use App\Models\Bank;
+use App\Models\ESI;
+use App\Models\PF;
 use App\Models\Department;
 use App\Models\Designation;
 use Illuminate\Support\Facades\Hash;
@@ -603,12 +605,15 @@ public function bankSearch(Request $request){
     ->select('emp_banks.*','branches.branch_name as branchName','banks.bank_name as bankName','branches.ifsc as ifsc') // Selecting columns from users and designations
     ->where('emp_banks.employee_id', $query) // Check if query is a user ID
     ->first();
+    $esi = ESI::where('employee_id','=',$query)->first();
+    $pf = PF::where('employee_id','=',$query)->first();
 
-    // dd($bankRecord);
     // Return the results as a JSON response
     return response()->json([
         'emp_id' => $emp_id,
-        'bankRecord' => $bankRecord
+        'bankRecord' => $bankRecord,
+        'esi' => $esi,
+        'pf' => $pf
     ]);
 }
 

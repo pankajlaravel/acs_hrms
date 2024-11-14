@@ -163,7 +163,7 @@
                       <a class="dropdown-item {{ request()->routeIs('employee.overview') ? 'active' : '' }}" href="{{ route('employee.overview') }}">Overview</a>
                       <a class="dropdown-item {{ request()->routeIs('eemployee.analyticsHub') ? 'active' : '' }}" href="{{ route('employee.analyticsHub') }}">Analytic Hub</a>
                       <a class="dropdown-item {{ request()->routeIs('employee.directory') ? 'active' : '' }}" href="{{ route('employee.directory') }}">Employee Directory</a>
-                      <a class="dropdown-item {{ request()->routeIs('employee.bankInfo') ? 'active' : '' }}" href="{{ route('employee.bankInfo') }}">Bank</a>
+                      <a class="dropdown-item {{ request()->routeIs('employee.bankInfo') ? 'active' : '' }}" href="{{ route('employee.bankInfo') }}">Bank/ESI</a>
                       <a class="dropdown-item {{ request()->routeIs('admin.employee') ? 'active' : '' }}" href="{{ route('admin.employee') }}">Employee List</a>
                       <a class="dropdown-item {{ request()->routeIs('admin.info.profile') ? 'active' : '' }}" href="{{ route('admin.info.profile') }}">Employee Profile</a>
                       <a class="dropdown-item {{ request()->routeIs('admin.info.family_details') ? 'active' : '' }}" href="{{ route('admin.info.family_details') }}">Family Details</a>

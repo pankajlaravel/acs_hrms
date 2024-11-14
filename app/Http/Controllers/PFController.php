@@ -8,72 +8,58 @@ use App\Models\PF;
 use App\Models\User;
 class PFController extends Controller
 {
-    public function adminPF(){
-        $pfs = PF::latest()->get();
-        $getPF = DB::table("p_f_s")
-        ->join("users","p_f_s.emp_id","=","users.id")
-        ->join("designations","users.designation_id","=","designations.id")
-        ->select('p_f_s.*',
-        'users.firstName as fname',
-        'users.lastName as lname',
-        'users.picture',
-        'designations.name as work_role'
-        )->orderBy('p_f_s.id', 'DESC')->get();
-        // dd($getPF);
-        $employees = User::latest()->where('role','=','employee')->get();
-        return view('admin.PF.list',compact('getPF','employees'));
+    public function updatePF(Request $request)
+    {
+
+        // dd($request->all());
+        // Validate the input
+        $request->validate([
+            // 'employee_id' => 'required|exists:e_s_i_s,employees,id',
+            'employee_id' => 'required',
+                'uan' => 'required|string|max:20',
+                'pf_number' => 'required|string|max:20',
+                'pf_join_date' => 'required|string|max:20',
+                'family_pf_number' => 'required|string|max:20',
+                'exits_eps' => 'required|string|max:20',
+                'allow_eps' => 'required|string|max:20',
+                'allow_epf' => 'required|string|max:20',
+                // 'document_type' => 'required|string|max:20',
+        ]);
+        // dd($request->employee_id);
+        // Find the employee and update the PF number
+        // $employee = PF::findOrFail($request->employee_id);
+        $employee = PF::where('employee_id', $request->employee_id)->first();
+        if ($employee) {
+            // Employee exists, so update the PF number
+            $employee->uan = $request->uan;
+            $employee->pf_number = $request->pf_number;
+            $employee->pf_join_date = $request->pf_join_date;
+            $employee->family_pf_number = $request->family_pf_number;
+            $employee->exits_eps = $request->exits_eps;
+            $employee->allow_epf = $request->allow_epf;
+            $employee->allow_eps = $request->allow_eps;
+            $employee->allow_epf = $request->allow_epf;
+            $employee->update();
+            $message = 'PF number updated successfully.';
+        } else {
+            // Employee does not exist, so create a new employee record
+            $employee = PF::create([
+                'employee_id' => $request->employee_id,
+                'uan' => $request->uan,
+                'pf_number' => $request->pf_number,
+                'pf_join_date' => $request->pf_join_date,
+                'family_pf_number' => $request->family_pf_number,
+                'exits_eps' => $request->exits_eps,
+                'allow_eps' => $request->allow_eps,
+                'allow_epf' => $request->allow_epf,
+                'document_type' => $request->document_type,
+            ]);
+            $message = 'New employee record created with PF number.';
+        }
+
+        // Respond with success status
+        return response()->json(['status' => 'success', 'message' => 'PF number updated successfully.']);
     }
     
-    public function adminPFStore(Request $request){
-        $data = $request->validate([
-            'emp_id' => 'required',
-            'pf_type' => 'required',
-            'emp_share_amt' => 'required',
-            'org_share_amt' => 'required',
-            'emp_share_persant' => 'required',
-            'org_share_persant' => 'required',
-            'description' => 'required',
-        ]);
-        $pfs = PF::create($data);
-        return response()->json(['success'=>'PF  added successfully...']);
-    }   
-
-    public function adminPFEdit($id)
-    {
-        // $pfs = PF::findOrFail($id);
-        $getPF = DB::table("p_f_s")
-        ->join("users","p_f_s.emp_id","=","users.id")
-        ->join("designations","users.designation_id","=","designations.id")
-        ->select('p_f_s.*',
-        'users.firstName as fname',
-        'users.lastName as lname',
-        'users.picture',
-        'designations.name as work_role'
-        )
-        ->where('p_f_s.id', $id)->first();
-        // dd($getPF);
-        return response()->json($getPF);
-    }
-
-    public function adminPFUpdate(Request $request){
-        $data = $request->validate([
-            'emp_id' => 'required',
-            'pf_type' => 'required',
-            'emp_share_amt' => 'required',
-            'org_share_amt' => 'required',
-            'emp_share_persant' => 'required',
-            'org_share_persant' => 'required',
-            'description' => 'required',
-            'status' => 'required',
-        ]);
-        $pfs = PF::findOrFail($request->id);
-        $pfs->update($data);
-        return response()->json(['success'=>'PF updated successfully...']);
-    }
-
-    public function adminPFDelete($id){
-        $data = PF::findOrFail($id);
-        $data->delete();
-        return response()->json(['success' => 'Data deleted successfully.']);
-    }
 }
+

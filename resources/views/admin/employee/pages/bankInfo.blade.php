@@ -73,8 +73,15 @@
           </div>
         </div>
           
-          {{--  --}}
+          {{-- Bank  --}}
           <div id="search-results" style="display: none;">
+          
+        </div>
+        {{-- ESI --}}
+        <div id="esiSection" style="display: none;">
+          
+        </div>
+        <div id="pfSection" style="display: none;">
           
         </div>
         
@@ -162,6 +169,7 @@
         $('#edit_employee_bank_details_form')[0].reset();
         $('#edit_employee_bank_details').modal('hide');
         $('#search-bank-info').trigger('submit');
+        $('#spinner').hide();
                     fetchEmployeeId();
     },
     error: function(xhr) {
@@ -178,157 +186,312 @@
     // search submit
     $('#search-bank-info').on('submit', function(e) {
       $('#spinner').show();
-            e.preventDefault(); // Prevent default form submission
+            e.preventDefault(); // Prevent default form submission 
             $('#search-results').show();
+            $('#esiSection').show();
+            $('#pfSection').show();
             $.ajax({
                 url: '{{ route("employees.bankSearch") }}', // Ensure this is the correct route
                 method: 'POST',
                 data: $(this).serialize(), // Serialize form data for submission
                 success: function(data) {
                     let resultsHtml = '';
+                    let resultESI = '';
+                    let resultPF = '';
                     $('.emp_id').val(data.emp_id.employee_id);
                 // console.log(data.emp_id.employee_id);
-                
+                    // alert(data.esi);
                     if (data.bankRecord) {
-                        $('#original').hide(); // Hide original content
-                       
-                            resultsHtml += `
-                            <div class="col-12">
-            <div class="row row-cards">
-              <div class="col-12">
-                <div class="card">
-                  <div class="card-body">
-                    <h3 class="card-title">Bank Account<a href="#" class="btn editBankBtn" data-id="${data.bankRecord.id}" data-bs-toggle="modal" data-bs-target="#edit_employee_bank_details"><i class="fa fa-pencil"></i></a> </h3>
-                    <div class="row row-cards">
-                      <!-- 4 columns in a row -->
-                      <div class="col-md-3">
-                        <div class="mb-3">
-                          <label class="mt-2 form-label">Bank Name</label>
-                          <p>${data.bankRecord.bankName || "--"}</p>
+        $('#original').hide(); // Hide original content
+
+        resultsHtml += `
+            <div class="col-12">
+                <div class="row row-cards">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <h3 class="card-title">Bank Account
+                                    <a href="#" class="btn editBankBtn" data-id="${data.bankRecord.id}" data-bs-toggle="modal" data-bs-target="#edit_employee_bank_details">
+                                        <i class="fa fa-pencil"></i>
+                                    </a>
+                                </h3>
+                                <div class="row row-cards">
+                                    <div class="col-md-3">
+                                        <div class="mb-3">
+                                            <label class="mt-2 form-label">Bank Name</label>
+                                            <p>${data.bankRecord.bankName || "--"}</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="mb-3">
+                                            <label class="mt-2 form-label">Bank Branch</label>
+                                            <p>${data.bankRecord.branchName || "--"}</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="mb-3">
+                                            <label class="mt-2 form-label">Bank Account No</label>
+                                            <p>${data.bankRecord.account_no || "--"}</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="mb-3">
+                                            <label class="mt-2 form-label">IFSC CODE</label>
+                                            <p>${data.bankRecord.ifsc || "--"}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row row-cards">
+                                    <div class="col-md-3">
+                                        <div class="mb-3">
+                                            <label class="mt-2 form-label">Account Type</label>
+                                            <p>${data.bankRecord.account_type || "--"}</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="mb-3">
+                                            <label class="mt-2 form-label">Payment Type</label>
+                                            <p>${data.bankRecord.payment_type || "--"}</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="mb-3">
+                                            <label class="mt-2 form-label">Name As Per Bank Records</label>
+                                            <p>${data.bankRecord.account_holder_name || "--"}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                      </div>
-                      <div class="col-md-3">
-                        <div class="mb-3">
-                          <label class="mt-2 form-label">Bank Branch</label>
-                          <p>${data.bankRecord.branchName || "--"}</p>
-                        </div>
-                      </div>
-                      <div class="col-md-3">
-                        <div class="mb-3">
-                          <label class="mt-2 form-label">Bank Account No</label>
-                          <p>${data.bankRecord.account_no || "--"}</p>
-                        </div>
-                      </div>
-                      <div class="col-md-3">
-                        <div class="mb-3">
-                          <label class="mt-2 form-label">IFSC CODE</label>
-                          <p>${data.bankRecord.ifsc}</p>
-                        </div>
-                      </div>
                     </div>
-          
-                    <!-- Add another row if more information is needed -->
-                    <div class="row row-cards">
-                      <div class="col-md-3">
-                        <div class="mb-3">
-                          <label class="mt-2 form-label">Account Type
-                          </label>
-                          <p>${data.bankRecord.account_type || "--"}</p>
-                        </div>
-                      </div>
-                      <div class="col-md-3">
-                        <div class="mb-3">
-                          <label class="mt-2 form-label">Payment Type</label>
-                          <p>${data.bankRecord.payment_type || "--"}</p>
-                        </div>
-                      </div>
-                      <div class="col-md-3">
-                        <div class="mb-3">
-                          <label class="mt-2 form-label">Name As Per Bank Records</label>
-                          <p>${data.bankRecord.account_holder_name || "--"}</p>
-                        </div>
-                      </div>
-                      
-                    </div>
-                  </div>
                 </div>
-              </div>
-            </div>
-          </div>
-          {{-- end --}}
-                            `;
-                      
-                    } else {
-                        $('#original').hide();
-                        resultsHtml += `
-                        
-                             {{-- Employee Information --}}
-          <div class="col-12">
-            <div class="row row-cards">
-              <div class="col-12">
-                <div class="card">
-                  <div class="card-body">
-                    <h3 class="card-title">Bank Account<a href="#" class="btn editEmp" data-id="--" data-bs-toggle="modal" data-bs-target="#add_emp_bank_details"><i class="fa fa-pencil"></i></a> </h3>
-                    <div class="row row-cards">
-                      <!-- 4 columns in a row -->
-                      <div class="col-md-3">
-                        <div class="mb-3">
-                          <label class="mt-2 form-label">Title</label>
-                          <p>--</p>
+            </div>`;
+    } else {
+        // No bank record section (placeholder content)
+        resultsHtml += `
+            <div class="col-12">
+                <div class="row row-cards">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <h3 class="card-title">Bank Account
+                                    <a href="#" class="btn editEmp" data-id="--" data-bs-toggle="modal" data-bs-target="#add_emp_bank_details">
+                                        <i class="fa fa-pencil"></i>
+                                    </a>
+                                </h3>
+                                <div class="row row-cards">
+                                    <div class="col-md-3">
+                                        <div class="mb-3">
+                                            <label class="mt-2 form-label">Bank Name</label>
+                                            <p>--</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="mb-3">
+                                            <label class="mt-2 form-label">Bank Branch</label>
+                                            <p>--</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="mb-3">
+                                            <label class="mt-2 form-label">Bank Account No</label>
+                                            <p>--</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="mb-3">
+                                            <label class="mt-2 form-label">IFSC CODE</label>
+                                            <p>--</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row row-cards">
+                                    <div class="col-md-3">
+                                        <div class="mb-3">
+                                            <label class="mt-2 form-label">Account Type</label>
+                                            <p>--</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="mb-3">
+                                            <label class="mt-2 form-label">Payment Type</label>
+                                            <p>--</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="mb-3">
+                                            <label class="mt-2 form-label">Name As Per Bank Records</label>
+                                            <p>--</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                      </div>
-                      <div class="col-md-3">
-                        <div class="mb-3">
-                          <label class="mt-2 form-label">Bank Branch</label>
-                          <p>--</p>
-                        </div>
-                      </div>
-                      <div class="col-md-3">
-                        <div class="mb-3">
-                          <label class="mt-2 form-label">Bank Account No</label>
-                          <p>--</p>
-                        </div>
-                      </div>
-                      <div class="col-md-3">
-                        <div class="mb-3">
-                          <label class="mt-2 form-label">IFSC CODE</label>
-                          <p>--</p>
-                        </div>
-                      </div>
                     </div>
-          
-                    <!-- Add another row if more information is needed -->
-                    <div class="row row-cards">
-                      <div class="col-md-3">
-                        <div class="mb-3">
-                          <label class="mt-2 form-label">Account Type
-                          </label>
-                          <p>--</p>
-                        </div>
-                      </div>
-                      <div class="col-md-3">
-                        <div class="mb-3">
-                          <label class="mt-2 form-label">Payment Type</label>
-                          <p>--</p>
-                        </div>
-                      </div>
-                      <div class="col-md-3">
-                        <div class="mb-3">
-                          <label class="mt-2 form-label">Name As Per Bank Records</label>
-                          <p>--</p>
-                        </div>
-                      </div>
-                      
-                    </div>
-                  </div>
                 </div>
-              </div>
+            </div>`;
+    }
+
+    // ESI Section
+    if (data.esi) {
+        resultESI += `
+            <div class="col-12">
+                            <div class="row row-cards">
+                                <div class="col-12">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <h3 class="card-title">ESI Account</h3>
+                                            <div class="row row-cards">
+                                                <div class="col-md-3">
+                                                    <div class="mb-3">
+                                                        <label class="form-label">
+                                                            <input type="checkbox" id="esiCheckbox" class="form-check-input" checked />
+                                                            Employee is covered under ESI
+                                                        </label>
+                                                        <input type="text" id="esiInput" class="mt-2 form-control" value="${data.esi.esi_number}" />
+                                                        <div id="esiActions" class="mt-2">
+                                                            <button id="saveEsiBtn" class="btn btn-primary btn-sm">Save</button>
+                                                            <button id="cancelEsiBtn" class="btn btn-secondary btn-sm">Cancel</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>`;
+    }else{
+        resultESI += `
+            <div class="col-12">
+                <div class="row row-cards">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <h3 class="card-title">ESI Account</h3>
+                                <div class="row row-cards">
+                                    <div class="col-md-3">
+                                        <div class="mb-3">
+                                        <label class="form-label">
+                                            <input type="checkbox" id="esiCheckbox" class="form-check-input" />
+                                            Employee is covered under ESI
+                                        </label>
+                                        <!-- ESI Number Display -->
+                                        <p id="esiDisplay"></p>
+                                        <!-- ESI Number Input Field (hidden initially) -->
+                                        <input type="text" id="esiInput" class="mt-2 form-control"  style="display: none;" />
+                                        <div id="esiActions" class="mt-2" style="display: none;">
+                                            <button id="saveEsiBtn" class="btn btn-primary btn-sm">Save</button>
+                                            <button id="cancelEsiBtn" class="btn btn-secondary btn-sm">Cancel</button>
+                                        </div>
+                                    </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>`;
+    }
+    // ESI Section
+   if(data.pf){
+    const isExistingMemberEPSChecked = (data.pf.exits_eps === 'true') ? 'checked' : '';
+    const allowEPFExcessChecked = (data.pf.allow_epf === 'true') ? 'checked' : '';
+    const allowEPSExcessChecked = (data.pf.allow_eps === 'true') ? 'checked' : '';
+    resultPF += `<div class="col-12">
+        <div class="row row-cards">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h3 class="card-title">Provident Fund Account</h3>
+                        <div class="row row-cards">
+                            <div class="col-md-3">
+                                <div class="mb-3">
+                                    <label class="form-label">
+                                        <input type="checkbox" id="pfCheckbox" class="form-check-input" checked />
+                                        Employee is covered under PF
+                                    </label>
+                                    <input type="text" value="${data.pf.uan || ''}" id="uanInput" class="mt-2 form-control" placeholder="UAN" />
+                                    <input type="text" value="${data.pf.pf_number || ''}" id="pfNumberInput" class="mt-2 form-control" placeholder="PF Number" />
+                                    <input type="date" value="${data.pf.pf_join_date || ''}" id="pfJoinDateInput" class="mt-2 form-control" placeholder="PF Join Date" />
+                                    <input type="text" value="${data.pf.family_pf_number || ''}" id="familyPfNoInput" class="mt-2 form-control" placeholder="Family PF No" />
+
+                                    <div class="mt-2 form-check">
+                                            <input type="checkbox" id="isExistingMemberEPS" class="form-check-input" ${isExistingMemberEPSChecked} />
+                                            Is Existing Member of EPS
+                                        </div>
+                                        <div class="mt-2 form-check">
+                                            <input type="checkbox" id="allowEPFExcess" class="form-check-input" ${allowEPFExcessChecked} />
+                                            Allow EPF Excess Contribution
+                                        </div>
+                                        <div class="mt-2 form-check">
+                                            <input type="checkbox" id="allowEPSExcess" class="form-check-input" ${allowEPSExcessChecked} />
+                                            Allow EPS Excess Contribution
+                                        </div>
+
+                                    <!-- PF Actions -->
+                                    <div id="pfActions" class="mt-2">
+                                        <button id="savePfBtn" class="btn btn-primary btn-sm">Save</button>
+                                        <button id="cancelPfBtn" class="btn btn-secondary btn-sm">Cancel</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
-                        `;
-                    }
+        </div>
+    </div>`;
+}else{
+       resultPF += `<div class="col-12">
+    <div class="row row-cards">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <h3 class="card-title">
+                        Provident Fund Account
+                    </h3>
+                    <div class="row row-cards">
+                        <div class="col-md-3">
+                            <div class="mb-3">
+                                <label class="form-label">
+                                    <input type="checkbox" id="pfCheckbox" class="form-check-input" />
+                                    Employee is covered under PF
+                                </label>
+                                <input type="text" id="uanInput" class="mt-2 form-control" placeholder="UAN" style="display: none;" />
+                                <input type="text" id="pfNumberInput" class="mt-2 form-control" placeholder="PF Number" style="display: none;" />
+                                <input type="date" id="pfJoinDateInput" class="mt-2 form-control" placeholder="PF Join Date" style="display: none;" />
+                                <input type="text" id="familyPfNoInput" class="mt-2 form-control" placeholder="Family PF No" style="display: none;" />
+
+                                <div class="mt-2 form-check" style="display: none;" id="pfCheckboxOptions">
+                                    <input type="checkbox" id="isExistingMemberEPS" class="form-check-input" /> Is Existing Member of EPS
+                                </div>
+                                <div class="mt-2 form-check" style="display: none;" id="pfCheckboxOptions">
+                                    <input type="checkbox" id="allowEPFExcess" class="form-check-input" /> Allow EPF Excess Contribution
+                                </div>
+                                <div class="mt-2 form-check" style="display: none;" id="pfCheckboxOptions">
+                                    <input type="checkbox" id="allowEPSExcess" class="form-check-input" /> Allow EPS Excess Contribution
+                                </div>
+
+                                <!-- PF Actions -->
+                                <div id="pfActions" class="mt-2" style="display: none;">
+                                    <button id="savePfBtn" class="btn btn-primary btn-sm">Save</button>
+                                    <button id="cancelPfBtn" class="btn btn-secondary btn-sm">Cancel</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>`;
+
+   }
                     
                     $('#search-results').html(resultsHtml);
+                    $('#esiSection').html(resultESI);
+                    $('#pfSection').html(resultPF);
                 },
                 error: function(xhr) {
                     console.log(xhr.responseText);
@@ -425,6 +588,123 @@
  $('#search-bank-info').trigger('submit');
 }
 </script>
+<script>
+    // ESI
+    $(document).on('change', '#esiCheckbox', function() {
+    if ($(this).is(':checked')) {
+        $('#esiDisplay').hide();        // Hide the ESI display text
+        $('#esiInput').show();          // Show the ESI input field
+        $('#esiActions').show();        // Show Save and Cancel buttons
+    } else {
+        resetEsiEditMode();              // Reset to display mode if unchecked
+    }
+});
 
+// PF
+$(document).on('change', '#pfCheckbox', function() {
+    // if ($(this).is(':checked')) {
+    //     $('#pfDisplay').hide();        // Hide the pf display text
+    //     $('#pfInput').show();          // Show the pf input field
+    //     $('#pfActions').show();        // Show Save and Cancel buttons
+    // } else {
+    //     resetPFEditMode();              // Reset to display mode if unchecked
+    // }
+    if ($(this).is(':checked')) {
+            $('#uanInput, #pfNumberInput, #pfJoinDateInput, #familyPfNoInput, #pfCheckboxOptions, #pfActions').show();
+        } else {
+            $('#uanInput, #pfNumberInput, #pfJoinDateInput, #familyPfNoInput, #pfCheckboxOptions, #pfActions').hide();
+        }
+});
+
+
+// Cancel button click handler
+$(document).on('click', '#cancelEsiBtn', function() {
+    resetEsiEditMode();  // Return to display mode without saving
+});
+
+$(document).on('click', '#cancelPfBtn', function() {
+    resetPFEditMode();  // Return to display mode without saving
+});
+
+// Function to reset to display mode
+function resetEsiEditMode() {
+    $('#esiCheckbox').prop('checked', false);
+    $('#esiDisplay').show();           // Show the ESI display text
+    $('#esiInput').hide();             // Hide the ESI input field
+    $('#esiActions').hide();           // Hide the Save and Cancel buttons
+    // $('#esiInput').val($('#esiDisplay').text()); // Reset input field to the original value
+}
+
+// PF
+function resetPFEditMode() {
+    $('#pfCheckbox').prop('checked', false);
+    $('#uanInput, #pfNumberInput, #pfJoinDateInput, #familyPfNoInput, #pfCheckboxOptions, #pfActions').hide();// Reset input field to the original value
+}
+
+// ESI
+$(document).on('click', '#saveEsiBtn', function() {
+    let newEsiNumber = $('#esiInput').val();
+    let employeeId = $('.emp_id').val(); // Assuming this input holds the employee ID
+    // alert(employeeId);
+
+    $.ajax({
+        url: '{{route("employee.updateEsi")}}',  // The route for saving ESI number
+        type: 'POST',
+        data: {
+            _token: $('meta[name="csrf-token"]').attr('content'),  // CSRF token for security
+            employee_id: employeeId,
+            esi_number: newEsiNumber,
+        },
+        success: function(response) {
+            if(response.status === 'success') {
+                $('#esiDisplay').text(newEsiNumber || "--");
+                alert(response.message);  // Optional success message
+            }
+            resetEsiEditMode(); 
+            $('#search-bank-info').trigger('submit');  // Return to display mode after saving
+        },
+        error: function(xhr) {
+            alert('Error updating ESI number.');
+            console.error(xhr.responseText); // For debugging purposes
+        }
+        // $('#search-bank-info').trigger('submit'); 
+    });
+});
+
+// PF
+$(document).on('click', '#savePfBtn', function() {
+    let employeeId = $('.emp_id').val(); // Assuming this input holds the employee ID
+    // alert(employeeId);
+    let pfData = {
+            _token: $('meta[name="csrf-token"]').attr('content'),
+            employee_id: employeeId,
+            uan: $('#uanInput').val(),
+            pf_number: $('#pfNumberInput').val(),
+            pf_join_date: $('#pfJoinDateInput').val(),
+            family_pf_number: $('#familyPfNoInput').val(),
+            exits_eps: $('#isExistingMemberEPS').is(':checked'),
+            allow_epf: $('#allowEPFExcess').is(':checked'),
+            allow_eps: $('#allowEPSExcess').is(':checked'),
+        };
+    $.ajax({
+        url: '{{route("employee.updatePF")}}',  // The route for saving ESI number
+        type: 'POST',
+        data: pfData,
+        success: function(response) {
+            if(response.status === 'success') {
+                $('#pfDisplay').text(newEsiNumber || "--");
+                alert(response.message);  // Optional success message
+            }
+            resetPFEditMode(); 
+            $('#search-bank-info').trigger('submit');  // Return to display mode after saving
+        },
+        error: function(xhr) {
+            alert('Error updating PF number.');
+            console.error(xhr.responseText); // For debugging purposes
+        }
+        // $('#search-bank-info').trigger('submit'); 
+    });
+});
+</script>
 
   @endsection

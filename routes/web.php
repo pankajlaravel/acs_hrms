@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\EmpBankController;
+use App\Http\Controllers\ESIController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
@@ -287,6 +288,13 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     // Emp Bank Details
     Route::post('/employees/bank/details/', [EmpBankController::class, 'empBankDetail'])->name('employees.empBankDetail');
     Route::POST('/bank/details/{id}/update', [EmpBankController::class, 'empBankDetailUpdate'])->name('empBankDetailUpdate');
+
+    // ESI
+    Route::post('/employee/update-esi', [ESIController::class, 'updateEsi'])->name('employee.updateEsi');
+    
+    // PF
+    Route::post('/employee/update-pf', [PFController::class, 'updatePF'])->name('employee.updatePF');
+    
 
     Route::get('/branches/{bank_id}', [EmpBankController::class, 'getBranches'])->name('branches.get');
 
