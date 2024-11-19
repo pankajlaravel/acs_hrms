@@ -617,4 +617,15 @@ public function bankSearch(Request $request){
     ]);
 }
 
+public function identityVerification(){
+    $employee = DB::table('users')
+    ->join('emp_banks','users.employee_id','=','emp_banks.employee_id')
+    ->join('banks','emp_banks.bank_id','=','banks.id')
+    ->join('branches','emp_banks.bank_branch_id','=','branches.id')
+    ->select('users.firstName','emp_banks.*','banks.bank_name','branches.branch_name')
+    ->where('role','=','employee')
+    ->get();
+    dd($employee);
+}
+
 }

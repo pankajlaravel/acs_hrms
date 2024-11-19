@@ -171,6 +171,7 @@
                       <a class="dropdown-item {{ request()->routeIs('admin.designation') ? 'active' : '' }}" href="{{ route('admin.designation') }}">Designations</a>
                       <a class="dropdown-item {{ request()->routeIs('admin.overtime') ? 'active' : '' }}" href="{{ route('admin.overtime') }}">Overtime</a>
                       <a class="dropdown-item {{ request()->routeIs('admin.employee.attendance') ? 'active' : '' }}" href="{{ route('admin.employee.attendance') }}">Attendance</a>
+                      <a class="dropdown-item {{ request()->routeIs('get.doc.info') ? 'active' : '' }}" href="{{ route('employeeDoc') }}">Employee Documents</a>
                   </div>
               </div>
           </div>

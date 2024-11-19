@@ -1,7 +1,9 @@
 <?php
 
 use App\Http\Controllers\EmpBankController;
+use App\Http\Controllers\EmpDocController;
 use App\Http\Controllers\ESIController;
+use App\Http\Controllers\PreviousEmploymentController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
@@ -34,6 +36,7 @@ use App\Http\Controllers\PayrollController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\BankController;
+use Illuminate\Support\Facades\Storage;
 
 /*
 |--------------------------------------------------------------------------
@@ -284,9 +287,24 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::post('/employees/bank/search/', [EmployeeController::class, 'bankSearch'])->name('employees.bankSearch');
     Route::get('/bank/detail/edit/{id}', [EmpBankController::class, 'employeeBankDetailsEdit'])->name('employeeBankDetailsEdit');
 
+    // identity-verification
+    Route::get('/employee/identity-verification/', [EmployeeController::class, 'identityVerification'])->name('employees.identityVerification');
+    
+    // Employee Document
+    Route::get('/employee/info/employee-docs/', [EmpDocController::class, 'employeeDoc'])->name('employeeDoc');
+
+    Route::post('/info/employee-docs/', [EmpDocController::class, 'employeeGetDoc'])->name('get.doc.info');
+    Route::post('store/info/employee-docs/', [EmpDocController::class, 'employeePostDoc'])->name('post.doc.info');
+    Route::get('/edit-doc-info/{id}', [EmpDocController::class, 'editDocument'])->name('edit.doc.info');
+    Route::post('delete-doc-file', [EmpDocController::class, 'deleteDocFile'])->name('delete.doc.file');
+    Route::delete('/delete-doc-info/{id}', [EmpDocController::class, 'deleteDocInfo']);
+    Route::get('/employee/downloadDocument/{id}', [EmpDocController::class, 'downloadDocument'])->name('download.document');
+   
+
+
 
     // Emp Bank Details
-    Route::post('/employees/bank/details/', [EmpBankController::class, 'empBankDetail'])->name('employees.empBankDetail');
+    Route::post('/employees/bank/details', [EmpBankController::class, 'empBankDetail'])->name('employees.empBankDetail');
     Route::POST('/bank/details/{id}/update', [EmpBankController::class, 'empBankDetailUpdate'])->name('empBankDetailUpdate');
 
     // ESI
@@ -324,6 +342,9 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
 
     // Get Data In Excel
     Route::get('/employees/export', [EmployeeController::class, 'exportEmployees'])->name('employees.export');
+
+    // PreviousEmployement
+    Route::get('previous-employments', [PreviousEmploymentController::class,'index'])->name('');
 
 });
 
