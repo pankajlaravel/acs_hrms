@@ -172,7 +172,7 @@
                       <a class="dropdown-item {{ request()->routeIs('admin.overtime') ? 'active' : '' }}" href="{{ route('admin.overtime') }}">Overtime</a>
                       <a class="dropdown-item {{ request()->routeIs('admin.employee.attendance') ? 'active' : '' }}" href="{{ route('admin.employee.attendance') }}">Attendance</a>
                       <a class="dropdown-item {{ request()->routeIs('get.doc.info') ? 'active' : '' }}" href="{{ route('employeeDoc') }}">Employee Documents</a>
-                  </div>
+                      <a class="dropdown-item {{ request()->routeIs('previousemployeement') ? 'active' : '' }}" href="{{ route('previousemployeement') }}">Previous Employeement
               </div>
           </div>
       </li>
@@ -183,6 +183,28 @@
           </span>
           <span class="nav-link-title">
             Task
+          </span>
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link {{ request()->routeIs('leave.type') ? 'active' : '' }}"  href="{{route('leave.type')}}" >
+          <span class="nav-link-icon d-md-none d-lg-inline-block"><!-- Download SVG icon from http://tabler-icons.io/i/home -->
+            <i class="fa fa-tasks"></i>
+          </span>
+          <span class="nav-link-title">
+            Leave
+          </span>
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link {{ request()->routeIs('get.apply.leave') ? 'active' : '' }}"  href="{{route('get.apply.leave')}}" >
+          <span class="nav-link-icon d-md-none d-lg-inline-block"><!-- Download SVG icon from http://tabler-icons.io/i/home -->
+            <i class="fa fa-tasks"></i>
+          </span>
+          <span class="nav-link-title">
+            Employee Leave
           </span>
         </a>
       </li>

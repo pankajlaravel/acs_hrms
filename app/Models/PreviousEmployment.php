@@ -9,8 +9,9 @@ class PreviousEmployment extends Model
 {
     use HasFactory;
     protected $fillable = [
+        'employee_id',
         'company_name',
-        'designation',
+        'designation_id',
         'from_date',
         'to_date',
         'relevant_experience_in_year',

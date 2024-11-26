@@ -52,7 +52,7 @@
  <script src="{{asset('admin/dist/js/demo.min159a.js?1726507346')}}" defer></script>
  <script src="{{asset('admin/assets/js/bootstrap.min.js')}}"></script>
  <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-beta.1/js/select2.min.js"></script>
- <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.4/main.min.js"></script>
+ 
  
  {{-- <script src="{{asset('admin/assets/js/custom.js')}}"></script> --}}
  @include('admin.employee.ajax.emp_info')

@@ -3,6 +3,8 @@
 use App\Http\Controllers\EmpBankController;
 use App\Http\Controllers\EmpDocController;
 use App\Http\Controllers\ESIController;
+use App\Http\Controllers\LeaveController;
+use App\Http\Controllers\LeaveTypeController;
 use App\Http\Controllers\PreviousEmploymentController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -68,6 +70,13 @@ Route::middleware('auth')->group(function () {
     Route::post('/user-info',[ProfileController::class,'userUpdate'])->name('userUpdate');
     Route::post('/check-in', [AttendanceController::class, 'checkIn'])->name('checkIn');
     Route::post('/check-out', [AttendanceController::class, 'checkOut'])->name('checkOut');
+
+    // Employee Leave
+    Route::get('/my-leave-record', [LeaveController::class, 'index'])->name('my.leave.record');
+    Route::post('/apply/leave/store', [LeaveController::class, 'applyLeave'])->name('apply.leave.store');
+    Route::get('/designation/edit/{id}', [LeaveController::class, 'adminDesignationEdit'])->name('admin.designation.edit');
+    Route::POST('/designation/{id}/update', [LeaveController::class, 'adminDesignationUpdate'])->name('admin.designation.update');
+    Route::delete('/designation/delete/{id}', [LeaveController::class, 'adminDesignationDelete'])->name('admin.designation.delete');
 });
 
 
@@ -127,6 +136,13 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::POST('/department/{id}/update', [DepartmentController::class, 'adminDepartmentUpdate'])->name('admin.department.update');
     Route::delete('/department/delete/{id}', [DepartmentController::class, 'adminDepartmentDelete'])->name('admin.department.delete');
 
+    // Leave Type
+    Route::get('/leave-types', [LeaveTypeController::class, 'index'])->name('leave.type');
+    Route::post('/leave-type/store', [LeaveTypeController::class, 'store'])->name('leave.type.store');
+    Route::get('/leave-type/edit/{id}', [LeaveTypeController::class, 'editLeave'])->name('leave.type.edit');
+    Route::POST('/leave-type/{id}/update', [LeaveTypeController::class, 'leaveUpdate'])->name('leave.type.update');
+    Route::delete('/leave-type/delete/{id}', [LeaveTypeController::class, 'leaveDelete'])->name('leave.type.delete');
+
     Route::get('/designations', [DesignationController::class, 'adminDesignation'])->name('admin.designation');
     Route::post('/designation/store', [DesignationController::class, 'adminDesignationStore'])->name('admin.designation.store');
     Route::get('/designation/edit/{id}', [DesignationController::class, 'adminDesignationEdit'])->name('admin.designation.edit');
@@ -141,6 +157,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
 
     // attendance
     Route::get('employee/attendance', [AttendanceController::class, 'showAttendance'])->name('admin.employee.attendance');
+    Route::get('employee/attendance-report', [AttendanceController::class, 'reportAttendance'])->name('employee.attendance.report');
     Route::post('/attendance/filter', [AttendanceController::class, 'filterAttendance'])->name('attendance.filter');
     Route::get('/attendance/data', [AttendanceController::class, 'getAttendanceData']);
 
@@ -344,7 +361,18 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::get('/employees/export', [EmployeeController::class, 'exportEmployees'])->name('employees.export');
 
     // PreviousEmployement
-    Route::get('previous-employments', [PreviousEmploymentController::class,'index'])->name('');
+    Route::get('employee/info/previousemployeement', [PreviousEmploymentController::class,'index'])->name('previousemployeement');
+    Route::post('get/employee/info/previousemployeement', [PreviousEmploymentController::class,'previousEmployeementGet'])->name('previousEmployeementGet');
+    Route::post('post/employee/info/previousemployeement', [PreviousEmploymentController::class,'previousEmployeementPost'])->name('previousEmployeementPost');
+    Route::delete('/previousemployeement/delete/{id}', [PreviousEmploymentController::class, 'previousemployeementDelete'])->name('previousemployeement.delete');
+    Route::get('/previousemployeement/edit/{id}', [PreviousEmploymentController::class, 'previousemployeementEdit'])->name('previousemployeement.edit');
+    Route::POST('/previousemployeement/{id}/update', [PreviousEmploymentController::class, 'previousemployeementdate'])->name('previousemployeement.update');
+
+    // Get Employee Leave
+    Route::get('employee/apply/leave', [LeaveController::class,'adminGetLeave'])->name('get.apply.leave');
+    Route::get('/view/apply/leave/{id}', [LeaveController::class, 'applyGetLeave']);
+    Route::post('/verify/apply/leave/{id}', [LeaveController::class, 'applyLeaveVerify']);
+
 
 });
 

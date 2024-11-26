@@ -14,6 +14,11 @@
                
                      </li>
 
+                     <li >
+                        <a href="{{route('my.leave.record')}}"><i class="la la-clock-o "></i> <span> Leave </span>  </a>
+               
+                     </li>
+
                   </ul>
                </div>
             </div>

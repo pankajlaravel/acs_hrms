@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Attendance;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use DB;
 
@@ -172,6 +173,33 @@ public function getAttendanceData()
     });
 
     return response()->json($attendance);
+}
+
+public function reportAttendance()
+{
+    // $attendances = DB::table('attendances')
+    //     ->select('created_at', DB::raw("CASE WHEN status = 'Present' THEN 'Present' ELSE 'Absent' END as status"))
+    //     ->get();
+    //     $attendanceData = $attendances->map(function ($item) {
+    //         return [
+    //             'date' => $item->created_at,
+    //             'status' => $item->status,
+    //         ];
+    //     });
+    $currentMonth = now()->month; // Current month
+    $currentYear = now()->year; // Current year
+        $attendances = Attendance::select('created_at', 'status')
+        ->whereMonth('created_at', now()->month)
+        ->whereYear('created_at', now()->year)
+        ->get()
+        ->keyBy('created_at');
+        // dd($attendances);
+
+    return view('admin.attendance.report', [
+        'attendances' => $attendances,
+        'monthName' => Carbon::now()->format('F'),
+        'year' => $currentYear,
+    ]);
 }
 
 }
