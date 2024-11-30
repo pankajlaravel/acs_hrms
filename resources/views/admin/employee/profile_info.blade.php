@@ -4,146 +4,65 @@
 @section('title', 'Dashboard - HRMS Admin')
 
 @section('content')
-<div class="page-wrapper">
-    <!-- Page header -->
-    <div class="page-header d-print-none">
-      <div class="container-xl">
-        <div class="row g-2 align-items-center">
-          
-   
-        
-          <!-- Page title actions -->
-          <div class="col-auto ms-auto d-print-none">
-           
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- Page body -->
-    <div class="page-body">
-      <div class="container-xl">
-        <div class="row row-deck row-cards">
-
-          <div class="col-auto ms-auto d-print-none">
-            <div class="btn-list">
-              
-              <a href="#" class="btn btn-primary d-none d-sm-inline-block" data-bs-toggle="modal" data-bs-target="#basic_info">
-                <!-- Download SVG icon from http://tabler-icons.io/i/plus -->
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 5l0 14" /><path d="M5 12l14 0" /></svg>
-              Add Employee
-              </a>
-              
-            </div>
-          </div>
-
-          {{-- Search --}}
-          <div class="col-12">
-            <div class="row row-cards">
-              <div class="col-12">
-                <div class="card" >
-                  <div class="card-body">
-                    <h3 class="card-title">Start searching to see specific employee details here</h3>
-                    <div class="row row-cards">
-                      <div class="col-md-5">
-                        <form id="search-form" method="post" >
-                          @csrf
-                        <div class="mb-3">
-                          <p>Search Employee</p>
-                          <div class="input-group">
-                            <span class="input-group-text" id="basic-addon1" style="border-radius: 50px 0px 0px 50px">
-                              <i class="fa fa-user" ></i> <!-- Bootstrap user icon -->
-                            </span>
-                            @if ($query)
-                            <input required type="search" id="search"  class="form-control custom-radius" placeholder="Search by Emp No/ Name" value="{{$results->firstName.' '.$results->lastName}}"  />
-                            <input  type="hidden" id="search_id" name="query" class="form-control custom-radius" placeholder="Search by Emp No/ Name" value="{{$query}}" />
-                            @else
-                            <input required type="search" id="search"  class="form-control custom-radius" placeholder="Search by Emp No/ Name"  />
-                            <input  type="hidden" id="search_id" name="query" class="form-control custom-radius" placeholder="Search by Emp No/ Name" />
-                            @endif
-                            {{-- <div id="suggestions" class="suggestions" style="position: absolute; z-index: 1000; display: none; background: white; border: 1px solid #ddd;"></div> --}}
-                            <button class="btn btn-primary" type="submit" style="border-radius: 0px 50px 50px 0px">
-                              <i class="fa fa-search"></i> <!-- Bootstrap search icon -->
-                            </button>
-                          </div>
-                        </div>
-                      </form>
-                    </div>
-                  </div>
-                </div>
-                <ul class="list-group" style="display:block;position:relative;z-index:1" id="results" ></ul>
-              </div>
-            </div>
-          </div>
-        </div>
-          
-          {{--  --}}
-          <div id="search-results" style="display: none;">
-          
-        </div>
-        
-        </div>
-      </div>
-    </div>
+<div class="content">
+  <div class="main-header-unique">
+    <button data-bs-toggle="modal" data-bs-target="#basic_info">Add Employee</button>
+</div>
+  <div class="col-auto ms-auto d-print-none">
     
- @include('admin.employee.edit_popup')
- @include('admin.employee.add_popup')
+  </div>
+  <div class="employee-search-container">
+    
+      <div class="employee-search-content">
+        <h4>Start searching to see specific employee details here</h4>
+        <div class="employee-type-container">
+
+        </div>
+        <form id="search-form" method="post" >
+          @csrf
+        <div class="employee-search-bar">
+          
+          <div class="search-icon">
+            <i class="fa fa-user"></i>
+          </div>
+        
+          @if ($query)
+          <input required type="search" id="search"  class="search-input" placeholder="Search by Emp No/ Name" value="{{$results->firstName.' '.$results->lastName}}"  />
+          <input  type="hidden" id="search_id" name="query" class="search-input" placeholder="Search by Emp No/ Name" value="{{$query}}" />
+          @else
+          <input required type="search" id="search"  class="search-input" placeholder="Search by Emp No/ Name"  />
+          <input  type="hidden" id="search_id" name="query" class="search-input" placeholder="Search by Emp No/ Name" />
+          @endif
+          <button class="search-button" type="submit">
+          <i class="fa fa-search"></i> 
+          </button>
+        </div>
+      </form>
+      
+        <!-- Suggestions List -->
+        <div class="suggestions-list" id="results" ></div>
+        <div class="suggestions-list" id="suggestionsList">
+          <!-- Suggestions will be dynamically populated -->
+        </div>
+      </div>
+      <div class="employee-search-image">
+        <img src="{{asset('admin/assets/img/emp-search.png')}}" alt="Search Illustration" />
+      </div>
+    </div>
+    <div id="search-results" style="display: none;">
+          
+    </div>
+<!-- Header Section -->
+<div id="empDetailInfo" style="display: none">
+
+  @include('admin.employee.empDetails')
+</div>
+</div>
+@include('admin.employee.ajax.emp_info')
+@include('admin.employee.add_popup')
   @endsection
   @section('script')
-  {{-- <script>
-    // Handle AJAX form submission and modal navigation
-$(document).ready(function () {
-    // Submit Basic Info Form
-    let email;
-    $('#employeeForm').on('submit', function (e) {
-        e.preventDefault();
-        submitForm($(this), 'employeePersonalInfoForm');
-    });
-
-    // Submit Personal Info Form
-    $('#employeePersonalInfoForm').on('submit', function (e) {
-        e.preventDefault();
-        submitForm($(this), 'editJoiningInfo');
-    });
-
-    // Submit Joining Info Form
-    $('#employeeJoiningInfoEditForm').on('submit', function (e) {
-        e.preventDefault();
-        submitForm($(this), null); // null indicates end of steps
-    });
-
-    // Function to handle form submission and show the next modal
-    function submitForm(form, nextModalId) {
-        let actionUrl = form.attr('data-action') || form.attr('action');
-        // alert();
-        $.ajax({
-            type: form.attr('method'),
-            url: actionUrl,
-            data: form.serialize(),
-            success: function (response) {
-                // Hide current modal
-                form.closest('.modal').modal('hide');
-                
-                // If there's a next modal, show it
-                if (nextModalId) {
-                    $('#' + nextModalId).modal('show');
-                } else {
-                    // End of the form process (optional success message)
-                    alert("Employee added successfully!");
-                }
-            },
-            error: function (response) {
-                // Display error messages (useful for server-side validation feedback)
-                let errors = response.responseJSON.errors;
-                form.find('.error').text(''); // Clear previous errors
-                for (let field in errors) {
-                    form.find('#' + field + 'Error').text(errors[field][0]);
-                }
-            }
-        });
-    }
-});
-
-  </script> --}}
+  
   <script>
    
         $.ajaxSetup({
@@ -167,7 +86,7 @@ $(document).ready(function () {
                 data: formData,
                 success: function (response) {
                   $('#basicInfoModal').modal('hide');
-                 
+                  
                     
                     // Change the URL after saving basic info
                     // window.history.pushState({}, '', 'admin/employee/info/personal/store/' + encodeURIComponent(email));
@@ -298,5 +217,7 @@ $(document).ready(function () {
         // end
     });
 </script>
+
+
 
   @endsection

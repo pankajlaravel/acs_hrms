@@ -7,6 +7,7 @@ use App\Http\Controllers\LeaveController;
 use App\Http\Controllers\LeaveTypeController;
 use App\Http\Controllers\PreviousEmploymentController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SubCategoryController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EmployeeController;
@@ -110,6 +111,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::post('/employee/joining/info/store', [EmployeeController::class, 'storeJoiningInfo'])->name('employee.joining.info.store');
     Route::post('/employee/position/info/store', [EmployeeController::class, 'storePositionInfo'])->name('employee.position.info.store');
     Route::post('/employee/address/info/store', [EmployeeController::class, 'storeAddressInfo'])->name('employee.address.info.store');
+    Route::post('/delete-photo', [EmployeeController::class, 'deletePhoto'])->name('delete.photo');
     // end
     Route::get('/employee/name/list', [EmployeeController::class, 'adminNameList'])->name('admin.employee.list');
     Route::get('/employees', [EmployeeController::class, 'adminEmployee'])->name('admin.employee');
@@ -342,6 +344,13 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::POST('/category-list/{id}/update', [CategoryController::class, 'categoryUpdate'])->name('category.update');
     Route::delete('/category-list/delete/{id}', [CategoryController::class, 'categoryDelete'])->name('category.delete');
 
+    // SubCategory CRUD
+    Route::get('/sub-category-list', [SubCategoryController::class, 'subCategoryList'])->name('sub.category.list');
+    Route::post('/sub-category-list/store', [SubCategoryController::class, 'subCategoryStore'])->name('sub.category.store');
+    Route::get('/sub-category-list/edit/{id}', [SubCategoryController::class, 'subCategoryEdit'])->name('sub.category.edit');
+    Route::POST('/sub-category-list/{id}/update', [SubCategoryController::class, 'subCategoryUpdate'])->name('sub.category.update');
+    Route::delete('/sub-category-list/delete/{id}', [SubCategoryController::class, 'subCategoryDelete'])->name('sub.category.delete');
+
 
     // Bank CRUD
     Route::get('/bank-list', [BankController::class, 'bankList'])->name('bank.list');
@@ -367,12 +376,13 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::delete('/previousemployeement/delete/{id}', [PreviousEmploymentController::class, 'previousemployeementDelete'])->name('previousemployeement.delete');
     Route::get('/previousemployeement/edit/{id}', [PreviousEmploymentController::class, 'previousemployeementEdit'])->name('previousemployeement.edit');
     Route::POST('/previousemployeement/{id}/update', [PreviousEmploymentController::class, 'previousemployeementdate'])->name('previousemployeement.update');
-
+    
     // Get Employee Leave
     Route::get('employee/apply/leave', [LeaveController::class,'adminGetLeave'])->name('get.apply.leave');
     Route::get('/view/apply/leave/{id}', [LeaveController::class, 'applyGetLeave']);
     Route::post('/verify/apply/leave/{id}', [LeaveController::class, 'applyLeaveVerify']);
-
+    
+    Route::get('employee/info/career_history', [PreviousEmploymentController::class,'index'])->name('previousemployeement');
 
 });
 

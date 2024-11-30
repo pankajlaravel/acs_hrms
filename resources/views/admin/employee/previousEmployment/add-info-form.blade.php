@@ -1,5 +1,5 @@
-<div class="container mt-5">
-    <form id="addEmploymentForm" method="POST" style="display:none;">
+
+    <form id="addEmploymentForm" class="employee-details" method="POST" style="display:none;">
         <h3>Add Previous Employment Details</h3>
         @csrf
         <div class="mb-3">
@@ -22,21 +22,21 @@
               </select>
         </div>
         <div class="row">
-            <div class="col-md-6 mb-3">
+            <div class="mb-3 col-md-6">
                 <label for="from_date" class="form-label">From Date</label>
                 <input type="date" class="form-control" id="from_date" name="from_date" required>
             </div>
-            <div class="col-md-6 mb-3">
+            <div class="mb-3 col-md-6">
                 <label for="to_date" class="form-label">To Date</label>
                 <input type="date" class="form-control" id="to_date" name="to_date" required>
             </div>
         </div>
         <div class="row">
             <label for="relevant_experience" class="form-label">Relevant Experience</label>
-        <div class="col-md-6 mb-3">
+        <div class="mb-3 col-md-6">
             <input type="number" class="form-control" id="relevant_experience_in_year" name="relevant_experience_in_year" placeholder="Enter experience in years" required>
         </div>
-        <div class="col-md-6 mb-3">
+        <div class="mb-3 col-md-6">
         <input type="number" class="form-control" id="relevant_experience_in_month" name="relevant_experience_in_month" placeholder="Enter experience in months" required>
         </div>
     </div>
@@ -55,4 +55,3 @@
         <button type="submit" class="btn btn-primary">Save</button>
         <button type="button" id="cancel-form" class="btn btn-secondary">Cancel</button>
     </form>
-</div>

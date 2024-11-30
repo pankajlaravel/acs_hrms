@@ -3,68 +3,60 @@
 @section('title', 'Dashboard - HRMS Admin')
 
 @section('content')
-<div class="page-wrapper">
-    <!-- Page Content -->
-    <div class="page-header d-print-none">
-        <div class="container-xl">
-            <div class="row g-2 align-items-center">
-                <div class="col">
-                    <h2 class="page-title">Analytics Hub</h2>
-                    <ul class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="{{route('admin.dashboard')}}">Dashboard</a></li>
-                        <li class="breadcrumb-item active">Analytics Hub</li>
-                    </ul>
-                </div>
+<div class="content">
+    <div class="employee-details">
+        <div id="error-messages"></div>
+        <div id="no-data-message" style="display: none;">
+            <div class="alert alert-warning">No data found for the selected date range.</div>
+        </div>
+        <form id="filter-form" method="GET" class="row g-3">
+            @csrf
+            <!-- Employee Status -->
+            <div class="col-md-3">
+                <label for="employee" class="form-label">Employee Status</label>
+                <select class="form-control" id="employee" name="employee" onchange="filterEmployees()">
+                    <option value="">All</option>
+                    <option value="Probation">Probation</option>
+                    <option value="Confirmed">Confirmed</option>
+                    <option value="Consultant">Consultant</option>
+                </select>
+                
+            </div>
+           
+        </form>
+       
+    </div> 
+    <div class="employee-details">
+        <!-- Left Container: Table -->
+        <div class="table-wrapper-unique">
+            <div class="main-header-unique">
+                {{-- <h2>All Employee Info</h2> --}}
+                {{-- <button>Add Employee</button> --}}
+            </div>
+
+           
+
+            <!-- Table -->
+            <div class="table-body-unique">
+                <table id="employeeTable">
+                    <thead>
+                        <tr>
+                            <th>Emp ID</th>
+                            <th>Emp Name</th>
+                            <th>Join Date</th>
+                            <th>Status</th>
+                            <th>Phone</th>
+                            <th>Email</th>
+                            <th>Extension Number</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        
+                    </tbody>
+                </table>
             </div>
         </div>
-    </div>
-    <!-- /Page Header -->
-
-    <div class="page-body">
-        <div class="container mt-4">
-            <div id="error-messages"></div>
-            <div id="no-data-message" style="display: none;">
-                <div class="alert alert-warning">No data found for the selected date range.</div>
-            </div>
-            <form id="filter-form" method="GET" class="row g-3">
-                @csrf
-                <!-- Employee Status -->
-                <div class="col-md-3">
-                    <label for="employee" class="form-label">Employee Status</label>
-                    <select class="form-select" id="employee" name="employee" onchange="filterEmployees()">
-                        <option value="">All</option>
-                        <option value="Probation">Probation</option>
-                        <option value="Confirmed">Confirmed</option>
-                        <option value="Consultant">Consultant</option>
-                    </select>
-                    
-                </div>
-               
-            </form>
-            <div class="col-12 text-end">
-                <button id="export-btn" class="btn btn-primary">Export to Excel</button>
-              </div>
-        </div>   
-
-        <div class="table-responsive">
-            <table id="employeeTable" class="table mb-0 card-table display table-vcenter text-nowrap custom-table datatable items-table">
-                <thead>
-                    <tr>
-                        <th>Emp ID</th>
-                        <th>Emp Name</th>
-                        <th>Join Date</th>
-                        <th>Status</th>
-                        <th>Phone</th>
-                        <th>Email</th>
-                        <th>Extension Number</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Data will be appended here dynamically -->
-                </tbody>
-            </table>
-        </div>
-    </div>
+    </div> 
 </div>   
 
 @endsection

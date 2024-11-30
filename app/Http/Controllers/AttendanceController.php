@@ -175,7 +175,7 @@ public function getAttendanceData()
     return response()->json($attendance);
 }
 
-public function reportAttendance()
+public function reportAttendance(Request $request)
 {
     // $attendances = DB::table('attendances')
     //     ->select('created_at', DB::raw("CASE WHEN status = 'Present' THEN 'Present' ELSE 'Absent' END as status"))
@@ -186,6 +186,7 @@ public function reportAttendance()
     //             'status' => $item->status,
     //         ];
     //     });
+    
     $currentMonth = now()->month; // Current month
     $currentYear = now()->year; // Current year
         $attendances = Attendance::select('created_at', 'status')

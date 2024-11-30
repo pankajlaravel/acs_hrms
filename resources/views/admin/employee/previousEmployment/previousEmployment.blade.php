@@ -4,106 +4,75 @@
 @section('title', 'Dashboard - HRMS Admin')
 
 @section('content')
-<div class="page-wrapper">
-    <!-- Page header -->
-    <div class="page-header d-print-none">
-      <div class="container-xl">
-        <div class="row g-2 align-items-center">
+<div class="content">
+    
+    <!-- Page body -->
+    <div class="employee-search-container">
+        <div class="employee-search-content">
+          <h4>Start searching to see specific employee details here</h4>
+          <div class="employee-type-container">
+    
+          </div>
+          <form id="search-pre-emp" method="post" >
+            @csrf
+          <div class="employee-search-bar">
+            
+            <div class="search-icon">
+              <i class="fa fa-user"></i>
+            </div>
           
-   
+            <input required type="search" id="search"  class="search-input" placeholder="Search by Emp No/ Name"  />
+            <input  type="hidden" id="search_id" name="query" class="search-input" placeholder="Search by Emp No/ Name" />
+            <button class="search-button" type="submit">
+            <i class="fa fa-search"></i> 
+            </button>
+          </div>
+        </form>
         
-          <!-- Page title actions -->
-          <div class="col-auto ms-auto d-print-none">
-           
+          <!-- Suggestions List -->
+          <div class="suggestions-list" id="results" ></div>
+          <div class="suggestions-list" id="suggestionsList">
+            <!-- Suggestions will be dynamically populated -->
           </div>
         </div>
+        <div class="employee-search-image">
+          <img src="{{asset('admin/assets/img/emp-search.png')}}" alt="Search Illustration" />
+        </div>
       </div>
-    </div>
-    <!-- Page body -->
-    <div class="page-body">
-      <div class="container-xl">
-        <div class="row row-deck row-cards">
 
-          <div class="col-auto ms-auto d-print-none">
-            <div class="btn-list">
-              
-              <a href="#" class="btn btn-primary d-none d-sm-inline-block" data-bs-toggle="modal" data-bs-target="#basic_info">
-                <!-- Download SVG icon from http://tabler-icons.io/i/plus -->
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 5l0 14" /><path d="M5 12l14 0" /></svg>
-              Add Employee
-              </a>
-              
+      <div class="mt-4 employee-details" id="original">
+        <!-- Left Container: Table -->
+        <div class="table-wrapper-unique">
+            <div class="main-header-unique">
+                <h2>Company Details</h2>
+                <button id="add-pre-info-button" style="display: none;">Add Previous Employment</button>
             </div>
-          </div>
 
-          {{-- Search --}}
-          <div class="col-12">
-            <div class="row row-cards">
-              <div class="col-12">
-                <div class="card" >
-                  <div class="card-body">
-                    <h3 class="card-title">Start searching to see specific employee details here</h3>
-                    <div class="row row-cards">
-                      <div class="col-md-5">
-                        <form id="search-pre-emp" method="post" >
-                          @csrf
-                        <div class="mb-3">
-                          <p>Search Employee</p>
-                          <div class="input-group">
-                            <span class="input-group-text" id="basic-addon1" style="border-radius: 50px 0px 0px 50px">
-                              <i class="fa fa-user" ></i> <!-- Bootstrap user icon -->
-                            </span>
-                          
-                            <input required type="search" id="search"  class="form-control custom-radius" placeholder="Search by Emp No/ Name"  />
-                            <input  type="hidden" id="search_id" name="query" class="form-control custom-radius" placeholder="Search by Emp No/ Name" />
-                       
-                            {{-- <div id="suggestions" class="suggestions" style="position: absolute; z-index: 1000; display: none; background: white; border: 1px solid #ddd;"></div> --}}
-                            <button class="btn btn-primary" type="submit" style="border-radius: 0px 50px 50px 0px">
-                              <i class="fa fa-search"></i> <!-- Bootstrap search icon -->
-                            </button>
-                          </div>
-                        </div>
-                      </form>
-                    </div>
-                  </div>
-                </div>
-                <ul class="list-group" style="display:block;position:relative;z-index:1" id="results" ></ul>
-            </div>
-            <button id="add-pre-info-button" class="mt-4 btn btn-success" style="display: none;">Previous Employment</button>
-            <div class="page-body" id="original" >
-                <div class="container">
-                    <div class="card">
-                        <div class="card-body">
-                            <div id="table-default" class="table-responsive">
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-                                            {{-- <th>Employee ID</th>
-                                            <th>Employee Name</th> --}}
-                                            <th>Company Name</th>
+            <!-- Table -->
+            <div class="table-body-unique" >
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Company Name</th>
                                             <th>Designation</th>
                                             <th>Relevant Experience</th>
                                             <th>From Date</th>
                                             <th>To Date</th>
                                             <th>Company Address</th>
                                             <th>Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody class="table-tbody" id="search-results">
-                                        <!-- Data will be appended here -->
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                        </tr>
+                    </thead>
+                    <tbody class="table-tbody" id="search-results">
+                       
+                    </tbody>
+                </table>
             </div>
-            @include('admin.employee.previousEmployment.edit-info-form')
+        </div>
+    </div>
+    @include('admin.employee.previousEmployment.edit-info-form')
             @include('admin.employee.previousEmployment.add-info-form')
             <div id="message" class="mt-3"></div>
             </div>
-          </div>
-        </div>
          <!-- Display area for document info -->
   @endsection
   @section('script')
@@ -134,9 +103,9 @@
                                 <td>${value.from_date}</td>
                                 <td>${value.to_date}</td>
                                 <td>${value.company_address || 'N/A'}</td>
-                                <td class="text-right">
+                                <td>
                                     <a class="editButton" href="javascript::void()" data-id="${value.id}"><i class="fa fa-pencil m-r-5"></i></a>
-                                    <a class="deleteBtn" href="javascript::void()" data-id="${value.id}"><i class="fa fa-trash-o m-r-5"></i></a>
+                                    <a class="deleteBtn" href="javascript::void()" data-id="${value.id}"><i class="fa fa-trash m-r-5"></i></a>
                                 </td>
                             </tr>
                         `;

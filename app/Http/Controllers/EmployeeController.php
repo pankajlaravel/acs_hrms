@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use File;
 use Illuminate\Http\Request;
 use Validator;
 use Response;
@@ -223,11 +224,21 @@ class EmployeeController extends Controller
             'reporting' => 'nullable|string|max:255',
             'role' => 'nullable|string|max:255',
             'attendance_marking_option' => 'nullable|string|max:255',
-            'position' => 'nullable|string|max:255',
-            'department' => 'nullable|string|max:255',
-            
+            'designation_id' => 'nullable|string|max:255',
+            'department_id' => 'nullable|string|max:255',
+            'picture' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
             
         ]);
+
+        if ($request->hasFile('picture')) {
+            // Delete the old picture if it exists (optional)
+            if ($user->picture) {
+                @unlink(public_path('employee/img/' . $user->picture));
+            }
+            $filename = time() . '_' . $request->file('picture')->getClientOriginalName();
+            $request->file('picture')->move(public_path('employee/img/'), $filename);
+            $data['picture'] = $filename;
+        }
     
         $user->update($data);
     
@@ -422,8 +433,8 @@ public function storePositionInfo(Request $request){
         'reporting' => 'nullable|string|max:255',
         
         'attendance_marking_option' => 'nullable|string|max:255',
-        'position' => 'nullable|string|max:255',
-        'department' => 'nullable|string|max:255',
+        'designation_id' => 'nullable|string|max:255',
+        'department_id' => 'nullable|string|max:255',
         
     ]);
         $employee = $request->session()->get('employee');
@@ -458,10 +469,10 @@ public function overview(){
             'name' => $user->firstName . ' ' . $user->lastName,
             'employee_id' => $user->employee_id,
             'joined_ago' => $user->created_at->diffForHumans(), // e.g., "1 month ago"
-            'photo_url' => "/path/to/employee/photo/{$user->id}/small", // Adjust photo path as needed
+            'photo_url' => asset("/employee/img/".$user->picture), // Adjust photo path as needed
         ];
     });
-
+    // dd($data);
     // Birthday count
     $today = Carbon::today();
     $oneWeekFromToday = Carbon::today()->addWeek();
@@ -484,7 +495,7 @@ public function overview(){
                 'employee_id' => $user->employee_id,
                 'birthday' => $user->dob,
                 'days_until_birthday' => $today->diffInDays(Carbon::parse($user->dob)->setYear($today->year)),
-                'photo_url' => "/path/to/employee/photo/{$user->id}/small", // Adjust photo path as needed
+                'photo_url' => asset("/employee/img/".$user->picture), // Adjust photo path as needed
             ];
         });
         // dd($upcomingBirthdays);
@@ -626,6 +637,33 @@ public function identityVerification(){
     ->where('role','=','employee')
     ->get();
     dd($employee);
+}
+
+public function deletePhoto(Request $request)
+{
+    // dd($request->all());
+    $employee = User::find($request->id);
+
+    if ($employee && $employee->picture) {
+        // Delete the photo file from storage
+        $photoPath = public_path('employee/img/' . $employee->picture);
+
+        if (Storage::exists($photoPath)) {
+            Storage::delete($photoPath);
+        }
+
+        if (File::exists($photoPath)) {
+            File::delete($photoPath);
+        }
+
+        // Remove the photo reference from the database
+        $employee->picture = '';
+        $employee->save();
+
+        return response()->json(['message' => 'Photo deleted successfully.']);
+    }
+
+    return response()->json(['message' => 'Photo not found or already deleted.'], 404);
 }
 
 }

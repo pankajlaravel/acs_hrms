@@ -8,24 +8,25 @@
 // alert('employeeId');
 $(document).on('click', '.editPersonalInfo', function() {
   const employeeId = $(this).data('id');
-  alert(employeeId);
+  $('#editPersonalInfo').show();
+  $('#empPersonalDetails').hide();
   $.get('/admin/employee/edit/' + employeeId, function (data) {
           $('.employeeId').val(data.id);
-          $('#dob').val(data.dob);
-          $('#birth_day').val(data.birth_day);
-          $('#blood_group').val(data.blood_group);
-          $('#father_name').val(data.father_name);
-          $('#marital_status').val(data.marital_status);
-          $('#marital_date').val(data.marital_date);
-          $('#spouse_name').val(data.spouse_name);
-          $('#nationality').val(data.nationality);
-          $('#residential_status').val(data.residential_status);
-          $('#place_of_birth').val(data.place_of_birth);
-          $('#country_of_origin').val(data.country_of_origin);
-          $('#religion').val(data.religion);
-          $('#physically_challened').val(data.physically_challened);
-          $('#is_director').val(data.is_director);
-          $('#personal_email').val(data.personal_email);
+          $('.dob').val(data.dob);
+          $('.birth_day').val(data.birth_day);
+          $('.blood_group').val(data.blood_group);
+          $('.father_name').val(data.father_name);
+          $('.marital_status').val(data.marital_status);
+          $('.marital_date').val(data.marital_date);
+          $('.spouse_name').val(data.spouse_name);
+          $('.nationality').val(data.nationality);
+          $('.residential_status').val(data.residential_status);
+          $('.place_of_birth').val(data.place_of_birth);
+          $('.country_of_origin').val(data.country_of_origin);
+          $('.religion').val(data.religion);
+          $('.physically_challened').val(data.physically_challened);
+          $('.is_director').val(data.is_director);
+          $('.personal_email').val(data.personal_email);
        
 
       });
@@ -48,7 +49,8 @@ $('#employeePersonalInfoEditForm').on('submit', function (e) {
       
       success: function(response) {
           // Hide modal and show success alert
-          $('#editPersonalInfo').modal('hide');
+          $('#editPersonalInfo').hide();
+            $('#empPersonalDetails').show();
           Swal.fire({
               icon: 'success',
               title: 'Record updated successfully',

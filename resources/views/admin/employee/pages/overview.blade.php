@@ -3,73 +3,71 @@
 @section('title', 'Dashboard - HRMS Admin')
 
 @section('content')
-<div class="page-wrapper">
-            <!-- Page Content -->
-            <div class="content container-fluid">
-               <!-- Page Header -->
-               <div class="page-header">
-                  <div class="row">
-                     <div class="col-sm-12">
-                        <h3 class="page-title">Welcome {{ auth()->user()->firstName }}</h3>
-                        <ul class="breadcrumb">
-                           <li class="breadcrumb-item active">Dashboard</li>
-                        </ul>
-                     </div>
-                  </div>
-               </div>
-               <!-- /Page Header -->
-               <div class="mt-2 row">
-
-                  {{-- Project Graph --}}
-                  <div class="mt-3 col-6">
-                     <div class="card dash-widget">
-                        <div class="card-body">
-                           <span class="dash-widget-icon"><i class="fa fa-cubes"></i></span>
-                           <div class="dash-widget-info">
-                            <h2>Employees Head Count</h2>
-                            <canvas id="headCountChart" width="400" height="200"></canvas>
-                           </div>
-                        </div>
-                     </div>
-                  </div>
-
-                  <div class="mt-3 col-6">
-                    <div class="card dash-widget">
-                       <div class="card-body">
-                          <span class="dash-widget-icon"><i class="fa fa-users"></i></span>
-                          <div class="dash-widget-info">
-                           <h2>New Joiners for Last 1 Month</h2>
-                           @foreach ($data as $val)
-                            <div class="card-body">
-                                <h5 class="card-title">{{$val['name']}}</h5>
-                                <p class="card-text"><strong>Employee ID:</strong>{{$val['employee_id']}}</p>
-                                <p class="card-text"><strong>Joined On:</strong> {{$val['joined_ago']}}</p>
-                            </div>  
-                            @endforeach  
-                          </div>
-                       </div>
-                    </div>
-                 </div>    
-
-                 <div class="mt-3 col-6">
-                    <div class="card dash-widget">
-                       <div class="card-body">
-                          <span class="dash-widget-icon"><i class="fa fa-birthday-cake"></i></span>
-                          <div class="dash-widget-info">
-                           <h2>Upcoming Birthdays for a week</h2>
-                           @foreach ($upcomingBirthdays as $val)
-                            <div class="card-body">
-                                <h5 class="card-title">{{$val['name']}}</h5>
-                                <p class="card-text"><strong>Employee ID:</strong> {{$val['employee_id']}}</p>
-                                <p class="card-text"><strong>DOB:</strong> {{$val['birthday']}}</p>
-                            </div>  
-                            @endforeach  
-                          </div>
-                       </div>
-                    </div>
-                 </div>  
+<div class="content">
+    <div class="grid-container">
+        <!-- Card 1 -->
+        <div class="card">
+          <div class="card-header">
+            <span>Employees Head Count</span>
+    
+          </div>
+          <canvas id="headCountChart" width="400" height="200"></canvas>
+         
+        </div>
+    
+        <!-- Card 2 -->
+        <div class="card">
+          <div class="card-header">
+            <span>Upcoming Birthdays for a week</span>
+          </div>
+          @foreach ($upcomingBirthdays as $val)
+          <div class="list-item">
+            <div style="display: flex; align-items: center;">
+              <div class="avatar">
+                @if ($val['photo_url'])
+                <img src="{{$val['photo_url']}}" alt="">
+                @else    
+                <i class="fas fa-user"></i> <!-- Font Awesome user icon -->
+                @endif
+              </div>
+              <div>
+                <small>{{$val['name']}}</small> <br>
+                <small>({{$val['employee_id']}})</small>
+              </div>
             </div>
-          
+            <div class="time-text">{{$val['birthday']}}</div>
+          </div>
+          @endforeach 
+        </div>
+    
+   
+        <!-- Card 5 -->
+        <div class="card">
+          <div class="card-header">
+            <span>New Joiners for Last 1 Month</span>
+          </div>
+          @foreach ($data as $val)
+          <div class="list-item">
+            <div style="display: flex; align-items: center;">
+              <div class="avatar">
+                @if ($val['photo_url'])
+                <img src="{{$val['photo_url']}}" alt="">
+                @else    
+                <i class="fas fa-user"></i> <!-- Font Awesome user icon -->
+                @endif
+              </div>
+              <div>
+                <small>{{$val['name']}}</small> <br>
+                <small>({{$val['employee_id']}})</small>
+              </div>
+            </div>
+            <div class="time-text">{{$val['joined_ago']}}</div>
+          </div>
+          @endforeach 
+        </div>
+        
+      </div>
+ 
         
 @endsection
 @section('script') 

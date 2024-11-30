@@ -8,30 +8,26 @@
 // alert('employeeId');
 $(document).on('click', '.editPositionInfo', function() {
   const employeeId = $(this).data('id');
+  $('#empCurrentPosition').show();
+  $('#empPositionDetails').hide();
 //   alert(employeeId);
   $.get('/admin/employee/edit/' + employeeId, function (data) {
           $('.employeeId').val(data.id);
-          $('#division').val(data.division);
-          $('#grade').val(data.grade);
-          $('#location').val(data.location);
-          $('#reporting').val(data.reporting);
-          $('#role').val(data.role);
-          $('#attendance_marking_option').val(data.attendance_marking_option);
+          $('.division').val(data.division);
+          $('.grade').val(data.grade);
+          $('.location').val(data.location);
+          $('.reporting').val(data.reporting);
+          $('.role').val(data.role);
+          $('.attendance_marking_option').val(data.attendance_marking_option);
+          $('.department_id').val(data.department_id);
+          $('.designation_id').val(data.designation_id);
           
-          let department_name = data.departmentName; 
-                let department_id = data.department; 
-
-                let designation_name = data.work_role; 
-                let designation_id = data.position; 
-                // $('#department_select').append(`<option value="${imageUrl}">${imageUrl}</option>`); 
-                $('#department_select').append(`<option value="${department_id}" selected>${department_name}</option>`); 
-                $('#designation_select').append(`<option value="${designation_id}" selected>${designation_name}</option>`);  
-       
+          
 
       });
 });
 
-$('#employeePositoinEditForm').on('submit', function (e) {
+$('#employeePositionEditForm').on('submit', function (e) {
   e.preventDefault(); // Prevent the default form submission behavior
   
   const formData = new FormData(this);
@@ -48,14 +44,15 @@ $('#employeePositoinEditForm').on('submit', function (e) {
       
       success: function(response) {
           // Hide modal and show success alert
-          $('#editPositionInfo').modal('hide');
+          $('#empCurrentPosition').hide();
+          $('#empPositionDetails').show();
           Swal.fire({
               icon: 'success',
               title: 'Record updated successfully',
           });
 
           // Reset the form after the update
-          $('#employeePositoinEditForm')[0].reset();
+          $('#employeePositionEditForm')[0].reset();
           
           // Update the search results area dynamically with the new data
           fetchUpdatedEmployeeList(); // Custom function to reload employee list

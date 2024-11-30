@@ -5,42 +5,24 @@
 @section('content')
 
 <!-- Page Wrapper -->
-<div class="page-wrapper">
-			
-
-        <!-- Page Header -->
-        
-        <div class="page-header d-print-none">
-            <div class="container-xl">
-              <div class="row g-2 align-items-center">
-                <div class="col">
-                  <h2 class="page-title">
-                    Category
-                  </h2>
-                  <ul class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="{{route('admin.dashboard')}}">Dashboard</a></li>
-                    <li class="breadcrumb-item active">Category</li>
-                </ul>
-                </div>
-                <div class="float-right col-auto ml-auto">
-                    <a href="#" class="btn btn-primary d-none d-sm-inline-block add-btn" data-toggle="modal" data-target="#add_Category"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 5l0 14" /><path d="M5 12l14 0" /></svg> Add Category</a>
-                   
-                </div>
-              </div>
-            </div>
-          </div>
-        <!-- /Page Header -->
+<div class="content">
+    
         <div class="page-body">
+            
             <div class="container-xl">
               <div class="row row-cards">
                 <div class="col-md-12"> 
-                    <div class="table-responsive">
-                        <table id="items-table" class="table mb-0 card-table display table-vcenter text-nowrap custom-table datatable">
+                    <div class="main-container-unique">
+                        <div class="main-header-unique">
+                            <h3>All Category</h3>
+                            <button data-bs-toggle="modal" data-bs-target="#add_Category">Add</button>
+                        </div>
+                        <table id="items-table" class="table-body-unique custom-table datatable">
                             <thead>
                                 <tr>
-                                    <th style="width: 30px;">#</th>
+                                    <th >#</th>
                                     <th>Category Name</th>
-                                    <th class="text-end">Action</th>
+                                    <th >Action</th>
                                 </tr>
                             </thead>
                            
@@ -52,14 +34,9 @@
                                     <td>{{ $num + 1 }}</td>
                                     <td>{{ $val['name']  }}</td>
                                     
-                                    <td class="text-end">
-                                        <span class="dropdown">
-                                          <button class="align-text-top btn dropdown-toggle" data-bs-boundary="viewport" data-bs-toggle="dropdown">Actions</button>
-                                          <div class="dropdown-menu dropdown-menu-end">
-                                            <a class="dropdown-item editCategory" href="#" data-bs-toggle="modal" data-id="{{ $val['id'] }}" data-bs-target="#edit_category"><i class="fa fa-pencil m-r-5"></i> Edit</a>
-                                            <a class="dropdown-item deleteCategoryBtn" href="#" data-toggle="modal" data-id="{{ $val['id'] }}" data-target="#delete_category"><i class="fa fa-trash-o m-r-5"></i> Delete</a>
-                                          </div>
-                                        </span>
+                                    <td >
+                                        <a class="editCategory" href="#" data-bs-toggle="modal" data-id="{{ $val['id'] }}" data-bs-target="#edit_category"><i class="fa fa-pencil m-r-5"></i> </a>
+                                            <a class="deleteCategoryBtn" href="#" data-toggle="modal" data-id="{{ $val['id'] }}" data-target="#delete_category"><i class="fa fa-trash m-r-5"></i> </a>
                                       </td>
                                 </tr>
     
@@ -82,20 +59,7 @@
     
     <!-- Edit Holiday Modal -->
     @include('admin.category.edit_popup')
-    <!-- /Edit Holiday Modal -->
-
-    <!-- Delete Holiday Modal -->
-  
-    <!-- /Delete Holiday Modal -->
     
-
-    <!-- /Page Content -->
-    
-    
-    
-
-<!-- /Page Wrapper -->
-
 @endsection
 @section('script')
 <script>

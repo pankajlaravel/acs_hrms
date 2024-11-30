@@ -1,3 +1,4 @@
+
 <script>
     $(document).ready(function() {
         $('#search').on('keyup', function() {
@@ -15,7 +16,8 @@
                                 var employee_id = item.employee_id;
                                 // console.log(employee_id);
                                 // $('#results').append('<li class="list-group result-item" data-name="'+ item.firstName'">' + item.firstName + '</li>');
-                                $('#results').append('<li class="list-group result-item" data-id="'+employee_id+'" data-name="' + fullName + '">' +fullName+ '</li>');
+                                // $('#results').append('<li class="list-group result-item" data-id="'+employee_id+'" data-name="' + fullName + '">' +fullName+ '</li>');
+                                $('#results').append('<div class="suggestion-item "><div class="result-item" data-id="'+employee_id+'" data-name="' + fullName + '"> <span class="suggestion-name" >' +fullName+ '</span> <span class="suggestion-id ">ID: ' +employee_id+ '</span></div></div>');
                             });
                         } else {
                             $('#results').append('<li class="list-group">No results found</li>');
@@ -52,494 +54,100 @@
                 method: 'POST',
                 data: $(this).serialize(), // Serialize form data for submission
                 success: function(data) {
+                  
+                 
                     let resultsHtml = '';
 
                     if (data.length > 0) {
                         $('#original').hide(); // Hide original content
                         $.each(data, function(index, employee) {
-                            resultsHtml += `
-                            <div class="col-12">
-            <div class="row row-cards">
-              <div class="col-12">
-                <div class="card" style="background-color: #ace5d3c4;">
-                  <div class="card-body">
-                    <h3 class="card-title">${employee.employee_id || "--"}</h3>
-                    <div class="row row-cards">
-                      <div class="col-md-5">
-                        <div class="mb-3">
-                          {{-- <label class="form-label mt-2">Company</label> --}}
+                          $('#empDetailInfo').show();
+                          $('.empID').attr('data-id', employee.id);
+                          $('#employeeId').val(employee.id);
+                          $('#firstName').text(employee.firstName + ' ' + employee.lastName);
+                          $('#title').text(employee.title);
+                          $('#nick_name').text(employee.nick_name);
+                          $('#gender').text(employee.gender);
+                          $('#username').text(employee.username);
+                          $('#phone').text(employee.phone);
+                          $('#email').text(employee.email);
+                          $('#extension').text(employee.extension);
+                          // Personal Info
+                          $('#dob').text(employee.dob);
+                          $('#birth_day').text(employee.birth_day);
+                          $('#blood_group').text(employee.blood_group);
+                          $('#father_name').text(employee.father_name);
+                          $('#marital_status').text(employee.marital_status);
+                          $('#marital_date').text(employee.marital_date);
+                          $('#spouse_name').text(employee.spouse_name);
+                          $('#nationality').text(employee.nationality);
+                          $('#residential_status').text(employee.residential_status);
+                          $('#place_of_birth').text(employee.place_of_birth);
+                          $('#country_of_origin').text(employee.country_of_origin);
+                          $('#religion').text(employee.religion);
+                          $('#international_emp').text(employee.international_emp);
+                          $('#physically_challened').text(employee.physically_challened);
+                          $('#is_director').text(employee.is_director);
+                          $('#personal_email').text(employee.personal_email);
+                          // Joining Details
+                          $('#joining_Date').text(employee.joining_Date);
+                          $('#join_confrimation_date').text(employee.join_confrimation_date);
+                          $('#joining_status').text(employee.joining_status);
+                          $('#probation_period').text(employee.probation_period);
+                          $('#notice_period').text(employee.notice_period);
+                          $('#current_company_experience').text(employee.current_company_experience);
+                          $('#pre_company_experiecne').text(employee.pre_company_experiecne);
+                          $('#total_experience').text(employee.total_experience);
+                          $('#referred_by').text(employee.referred_by);
+
+                          // current position
+                          $('#division').text(employee.division);
+                          $('#grade').text(employee.grade);
+                          $('#departmentName').text(employee.departmentName);
+                          $('#location').text(employee.location);
+                          $('#position_name').text(employee.position_name);
+                          $('#reporting').text(employee.reporting);
+                          $('#role').text(employee.role);
+                          $('#attendance_marking_option').text(employee.attendance_marking_option);
+                          // Address
+                          $('#extension').text(employee.extension);
+                          $('#address').text(employee.address);
+                          $('#city').text(employee.city);
+                          $('#state').text(employee.state);
+                          $('#country').text(employee.country);
+                          $('#pin').text(employee.pin);
+                          $('#phone1').text(employee.phone1);
+                          $('#phone2').text(employee.phone2);
+                          $('#extension').text(employee.extension);
+                          $('#fax').text(employee.fax);
+                          $('#phone').text(employee.phone);
+                          $('#email').text(employee.email);
                           
-                        </div>
-                      </div>
-                     
-                    </div>
-                  </div>
+                            resultsHtml += `<div class="profile-header">
+  <div class="profile-image">
+      ${
+        employee.picture 
+          ? `<img src="{{asset('employee/img/${employee.picture}')}}" alt="${employee.picture}">`
+          : `<img src="{{asset('employee/img/large.png')}}" alt="Employee Image">`
+      }
+  </div>
+  <div class="profile-info">
+      <h2>${employee.firstName} ${employee.lastName}</h2>
+      <p>${employee.employee_id || "--"}</p>
+  </div>
+  <div class="profile-actions">
+      <button class="action-btn updatePhotoBtn" id="updatePhotoBtn" data-id="${employee.id}">
+          <i class="fa fa-camera"></i> Update Photo
+      </button>
+      <!-- Hidden File Input -->
+      <input type="file" id="photoInput" name="picture" data-id="${employee.id}" class="photoInput" style="display: none;" accept="image/*">
+      <button class="action-btn delete-btn deletePhotoBtn" data-id="${employee.id}">
+          <i class="fa fa-trash"></i>
+      </button>
+  </div>
+</div>
 
-                </div>
-              </div>
-              
-            </div>
-          </div>
-                             {{-- Employee Information --}}
-          <div class="col-12">
-            <div class="row row-cards">
-              <div class="col-12">
-                <div class="card">
-                  <div class="card-body">
-                    <h3 class="card-title">Employee Information  <a href="#" class="btn editEmp" data-id="${employee.id}" data-bs-toggle="modal" data-bs-target="#edit_employee"><i class="fa fa-pencil"></i></a> </h3>
-                    <div class="row row-cards">
-                      <!-- 4 columns in a row -->
-                      <div class="col-md-3">
-                        <div class="mb-3">
-                          <label class="form-label mt-2">Title</label>
-                          <p>${employee.title || "--"}</p>
-                        </div>
-                      </div>
-                      <div class="col-md-3">
-                        <div class="mb-3">
-                          <label class="form-label mt-2">Nick Name</label>
-                          <p>${employee.nick_name || "--"}</p>
-                        </div>
-                      </div>
-                      <div class="col-md-3">
-                        <div class="mb-3">
-                          <label class="form-label mt-2">Gender</label>
-                          <p>${employee.gender || "--"}</p>
-                        </div>
-                      </div>
-                      <div class="col-md-3">
-                        <div class="mb-3">
-                          <label class="form-label mt-2">Name</label>
-                          <p>${employee.firstName} ${employee.lastName}</p>
-                        </div>
-                      </div>
-                    </div>
-          
-                    <!-- Add another row if more information is needed -->
-                    <div class="row row-cards">
-                      <div class="col-md-3">
-                        <div class="mb-3">
-                          <label class="form-label mt-2">Employee Login Username
-                          </label>
-                          <p>${employee.username || "--"}</p>
-                        </div>
-                      </div>
-                      <div class="col-md-3">
-                        <div class="mb-3">
-                          <label class="form-label mt-2">Mobile</label>
-                          <p>${employee.phone || "--"}</p>
-                        </div>
-                      </div>
-                      <div class="col-md-3">
-                        <div class="mb-3">
-                          <label class="form-label mt-2">Email</label>
-                          <p>${employee.email || "--"}</p>
-                        </div>
-                      </div>
-                      <div class="col-md-3">
-                        <div class="mb-3">
-                          <label class="form-label mt-2">Extension</label>
-                          <p>${employee.extension || "--"}</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {{-- Personal Inforamtion --}}
-          <div class="mt-2 col-12">
-            <div class="row row-cards">
-              <div class="col-12">
-                <div class="card">
-                  <div class="card-body">
-                    <h3 class="card-title">Personal  Information  <a href="#" class="btn editPersonalInfo" data-id="${employee.id}" data-bs-toggle="modal" data-bs-target="#editPersonalInfo"><i class="fa fa-pencil"></i></a></h3>
-                    <div class="row row-cards">
-                      <!-- 4 columns in a row -->
-                      <div class="col-md-3">
-                        <div class="mb-3">
-                          <label class="form-label mt-2">DOB</label>
-                          <p>${employee.dob || "--"}</p>
-                        </div>
-                      </div>
-                      <div class="col-md-3">
-                        <div class="mb-3">
-                          <label class="form-label mt-2">Birthday</label>
-                          <p>${employee.birth_day || "--"}</p>
-                        </div>
-                      </div>
-                      <div class="col-md-3">
-                        <div class="mb-3">
-                          <label class="form-label mt-2">Blood Group
-                          </label>
-                          <p>${employee.blood_group || "--"}</p>
-                        </div>
-                      </div>
-                      <div class="col-md-3">
-                        <div class="mb-3">
-                          <label class="form-label mt-2">Father's Name
-                          </label>
-                          <p>${employee.father_name || "--"}</p>
-                        </div>
-                      </div>
-                    </div>
-          
-                    <!-- Add another row if more information is needed -->
-                    <div class="row row-cards">
-                      <div class="col-md-3">
-                        <div class="mb-3">
-                          <label class="form-label mt-2">Marital Status
-                          </label>
-                          <p>${employee.marital_status || "--"}</p>
-                        </div>
-                      </div>
-                      <div class="col-md-3">
-                        <div class="mb-3">
-                          <label class="form-label mt-2">Marriage Date
-                          </label>
-                          <p>${employee.marital_date || "--"}</p>
-                        </div>
-                      </div>
-                      <div class="col-md-3">
-                        <div class="mb-3">
-                          <label class="form-label mt-2">Spouse Name
-                          </label>
-                          <p>${employee.spouse_name || "--"}</p>
-                        </div>
-                      </div>
-                      <div class="col-md-3">
-                        <div class="mb-3">
-                          <label class="form-label mt-2">Nationality</label>
-                          <p>${employee.nationality || "--"}</p>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div class="row row-cards">
-                      <div class="col-md-3">
-                        <div class="mb-3">
-                          <label class="form-label mt-2">Residential Status
-                          </label>
-                          <p>${employee.residential_status || "--"}</p>
-                        </div>
-                      </div>
-                      <div class="col-md-3">
-                        <div class="mb-3">
-                          <label class="form-label mt-2">Place Of Birth
-                          </label>
-                          <p>${employee.place_of_birth || "--"}</p>
-                        </div>
-                      </div>
-                      <div class="col-md-3">
-                        <div class="mb-3">
-                          <label class="form-label mt-2">Country Of Origin
-                          </label>
-                          <p>${employee.country_of_origin || "--"}</p>
-                        </div>
-                      </div>
-                      <div class="col-md-3">
-                        <div class="mb-3">
-                          <label class="form-label mt-2">Religion</label>
-                          <p>${employee.religion || "--"}</p>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div class="row row-cards">
-                      <div class="col-md-3">
-                        <div class="mb-3">
-                          <label class="form-label mt-2">International Employee
-                          </label>
-                          <p>${employee.international_emp || "--"}</p>
-                        </div>
-                      </div>
-                      <div class="col-md-3">
-                        <div class="mb-3">
-                          <label class="form-label mt-2">Physically Challenged
-                          </label>
-                          <p>${employee.physically_challened || "--"}</p>
-                        </div>
-                      </div>
-                      <div class="col-md-3">
-                        <div class="mb-3">
-                          <label class="form-label mt-2">Is Director
-                          </label>
-                          <p>${employee.is_director || "--"}</p>
-                        </div>
-                      </div>
-                      <div class="col-md-3">
-                        <div class="mb-3">
-                          <label class="form-label mt-2">Personal Email
-                          </label>
-                          <p>${employee.personal_email  || "--"}</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          {{-- end --}}
-          {{-- Joining Details --}}
-          <div class="mt-2 col-12">
-            <div class="row row-cards">
-              <div class="col-12">
-                <div class="card">
-                  <div class="card-body">
-                    <h3 class="card-title">Joining Details <a href="#" class="btn editJoiningInfo" data-id="${employee.id}" data-bs-toggle="modal" data-bs-target="#editJoiningInfo"><i class="fa fa-pencil"></i></a></h3>
-                    <div class="row row-cards">
-                      <!-- 4 columns in a row -->
-                      <div class="col-md-3">
-                        <div class="mb-3">
-                          <label class="form-label mt-2">Joined On</label>
-                          <p>${employee.joining_Date || "--"}</p>
-                        </div>
-                      </div>
-                      <div class="col-md-3">
-                        <div class="mb-3">
-                          <label class="form-label mt-2">Confirmation Date</label>
-                          <p>${employee.join_confrimation_date || "--"}</p>
-                        </div>
-                      </div>
-                      <div class="col-md-3">
-                        <div class="mb-3">
-                          <label class="form-label mt-2">Status</label>
-                          <p>${employee.joining_status || "--"}</p>
-                        </div>
-                      </div>
-                      <div class="col-md-3">
-                        <div class="mb-3">
-                          <label class="form-label mt-2">Probation Period</label>
-                          <p>${employee.probation_period || "--"}</p>
-                        </div>
-                      </div>
-                    </div>
-          
-                    <!-- Add another row if more information is needed -->
-                    <div class="row row-cards">
-                      <div class="col-md-3">
-                        <div class="mb-3">
-                          <label class="form-label mt-2">Notice Period
-                          </label>
-                          <p>${employee.notice_period || "--"}</p>
-                        </div>
-                      </div>
-                      <div class="col-md-3">
-                        <div class="mb-3">
-                          <label class="form-label mt-2">Current Company Experience</label>
-                          <p>${employee.current_company_experience || "--"}</p>
-                        </div>
-                      </div>
-                      <div class="col-md-3">
-                        <div class="mb-3">
-                          <label class="form-label mt-2">Previous Experience</label>
-                          <p>${employee.pre_company_experiecne || "--"}</p>
-                        </div>
-                      </div>
-                      <div class="col-md-3">
-                        <div class="mb-3">
-                          <label class="form-label mt-2">Total Experience</label>
-                          <p>${employee.total_experience || "--"}</p>
-                        </div>
-                      </div>
-                    </div>
-
-                    <!-- Add another row if more information is needed -->
-                    <div class="row row-cards">
-                      <div class="col-md-3">
-                        <div class="mb-3">
-                          <label class="form-label mt-2">Referred By
-                          </label>
-                          <p>${employee.referred_by || "--"}</p>
-                        </div>
-                      </div>
-                                                               
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          {{--  --}}
-
-          {{-- Current Position --}}
-          <div class="mt-2 col-12">
-            <div class="row row-cards">
-              <div class="col-12">
-                <div class="card">
-                  <div class="card-body">
-                    <h3 class="card-title">Current Position <a href="#" class="btn editPositionInfo" data-id="${employee.id}" data-bs-toggle="modal" data-bs-target="#editPositionInfo"><i class="fa fa-pencil"></i></a></h3>
-                    <div class="row row-cards">
-                      <!-- 4 columns in a row -->
-                      <div class="col-md-3">
-                        <div class="mb-3">
-                          <label class="form-label mt-2">Division</label>
-                          <p>${employee.division || "--"}</p>
-                        </div>
-                      </div>
-                      <div class="col-md-3">
-                        <div class="mb-3">
-                          <label class="form-label mt-2">Grade</label>
-                          <p>${employee.grade || "--"}</p>
-                        </div>
-                      </div>
-                      <div class="col-md-3">
-                        <div class="mb-3">
-                          <label class="form-label mt-2">Department</label>
-                          <p>${employee.departmentName || "--"}</p>
-                        </div>
-                      </div>
-                      <div class="col-md-3">
-                        <div class="mb-3">
-                          <label class="form-label mt-2">Location</label>
-                          <p>${employee.location || "--"}</p>
-                        </div>
-                      </div>
-                    </div>
-          
-                    <!-- Add another row if more information is needed -->
-                    <div class="row row-cards">
-                      <div class="col-md-3">
-                        <div class="mb-3">
-                          <label class="form-label mt-2">Designation
-                          </label>
-                          <p>${employee.position_name || "--"}</p>
-                        </div>
-                      </div>
-                      <div class="col-md-3">
-                        <div class="mb-3">
-                          <label class="form-label mt-2">Reporting To</label>
-                          <p>${employee.reporting || "--"}</p>
-                        </div>
-                      </div>
-                      <div class="col-md-3">
-                        <div class="mb-3">
-                          <label class="form-label mt-2">Category</label>
-                          <p>${employee.role || "--"}</p>
-                        </div>
-                      </div>
-                      <div class="col-md-3">
-                        <div class="mb-3">
-                          <label class="form-label mt-2">Attendance Marking Option</label>
-                          <p>${employee.attendance_marking_option || "--"}</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          {{-- end --}}
-
-          {{-- Present Address --}}
-          <div class="mt-2 col-12">
-            <div class="row row-cards">
-              <div class="col-12">
-                <div class="card">
-                  <div class="card-body">
-                    <h3 class="card-title">Present Address <a href="#" class="btn editPresentInfo" data-id="${employee.id}" data-bs-toggle="modal" data-bs-target="#editPresentInfo"><i class="fa fa-pencil"></i></a></h3>
-                    <div class="row row-cards">
-                      <!-- 4 columns in a row -->
-                      <div class="col-md-3">
-                        <div class="mb-3">
-                          <label class="form-label mt-2">Name</label>
-                          <p>${employee.extension || "--"}</p>
-                        </div>
-                      </div>
-                      <div class="col-md-3">
-                        <div class="mb-3">
-                          <label class="form-label mt-2">Address</label>
-                          <p>${employee.address || "--"}</p>
-                        </div>
-                      </div>
-                      <div class="col-md-3">
-                        <div class="mb-3">
-                          <label class="form-label mt-2">City
-                          </label>
-                          <p>${employee.city || "--"}</p>
-                        </div>
-                      </div>
-                      <div class="col-md-3">
-                        <div class="mb-3">
-                          <label class="form-label mt-2">State
-                          </label>
-                          <p>${employee.state || "--"}</p>
-                        </div>
-                      </div>
-                    </div>
-          
-                    <!-- Add another row if more information is needed -->
-                    <div class="row row-cards">
-                      <div class="col-md-3">
-                        <div class="mb-3">
-                          <label class="form-label mt-2">Country
-                          </label>
-                          <p>${employee.country || "--"}</p>
-                        </div>
-                      </div>
-                      <div class="col-md-3">
-                        <div class="mb-3">
-                          <label class="form-label mt-2">Pincode
-                          </label>
-                          <p>${employee.pin || "--"}</p>
-                        </div>
-                      </div>
-                      <div class="col-md-3">
-                        <div class="mb-3">
-                          <label class="form-label mt-2">Phone1
-                          </label>
-                          <p>${employee.phone1 || "--"}</p>
-                        </div>
-                      </div>
-                      <div class="col-md-3">
-                        <div class="mb-3">
-                          <label class="form-label mt-2">Phone2</label>
-                          <p>${employee.phone2 || "--"}</p>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div class="row row-cards">
-                      <div class="col-md-3">
-                        <div class="mb-3">
-                          <label class="form-label mt-2">Ext
-                          </label>
-                          <p>${employee.extension || "--"}</p>
-                        </div>
-                      </div>
-                      <div class="col-md-3">
-                        <div class="mb-3">
-                          <label class="form-label mt-2">Fax
-                          </label>
-                          <p>${employee.fax || "--"}</p>
-                        </div>
-                      </div>
-                      <div class="col-md-3">
-                        <div class="mb-3">
-                          <label class="form-label mt-2">Mobile
-                          </label>
-                          <p>${employee.phone || "--"}</p>
-                        </div>
-                      </div>
-                      <div class="col-md-3">
-                        <div class="mb-3">
-                          <label class="form-label mt-2">Emial</label>
-                          <p>${employee.email || "--"}</p>
-                        </div>
-                      </div>
-                    </div>
-
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          {{-- end --}}
-                            `;
+`;
                         });
                     } else {
                         $('#original').hide();
@@ -584,21 +192,24 @@
     }
 });
 // alert('employeeId');
-$(document).on('click', '.editEmp', function() {
+$(document).on('click', '.editEmpInfo', function() {
     const employeeId = $(this).data('id');
+    $('#empInformation').show();
+    $('#empDetail').hide();
     // alert(employeeId);
     $.get('/admin/employee/edit/' + employeeId, function (data) {
             $('#employeeId').val(data.id);
-            $('#title').val(data.title);
-            $('#nick_name').val(data.nick_name);
-            $('#firstName').val(data.firstName);
-            $('#lastName').val(data.lastName);
-            $('#username').val(data.username);
-            $('#emp_id').val(data.employee_id);
-            $('#phone').val(data.phone);
-            $('#email').val(data.email);
-            $('#extension').val(data.extension);
-            $('#gender').val(data.gender);
+           
+            $('.title').val(data.title);
+            $('.nick_name').val(data.nick_name);
+            $('.firstName').val(data.firstName);
+            $('.lastName').val(data.lastName);
+            $('.username').val(data.username);
+            $('.emp_id').val(data.employee_id);
+            $('.phone').val(data.phone);
+            $('.email').val(data.email);
+            $('.extension').val(data.extension);
+            $('.gender').val(data.gender);
             // $('#picture').html(`<img src"{{asset("/employee/img")}}/"`+ data.picture);
             $('.departmentName').val(data.departmentName);
                 
@@ -636,7 +247,8 @@ $('#employeeInfoEditForm').on('submit', function (e) {
         
         success: function(response) {
             // Hide modal and show success alert
-            $('#edit_employee').modal('hide');
+            $('#empInformation').hide();
+            $('#empDetail').show();
             Swal.fire({
                 icon: 'success',
                 title: 'Record updated successfully',
@@ -665,3 +277,101 @@ function fetchUpdatedEmployeeList() {
 
 });
     </script>
+    <script>
+      $(document).ready(function () {
+        // Open file input when button is clicked
+        // $('.updatePhotoBtn').click(function () {
+          $(document).on('click', '.updatePhotoBtn', function() {
+          $('#photoInput').click();
+        });
+    
+        // Handle file selection and send it to the server via AJAX
+        // $('#photoInput').change(function () {
+          $(document).on('change', '.photoInput', function() {
+            const id = $(this).data('id');
+            // alert('id: '+id)
+           var formData = new FormData();
+          formData.append('picture', this.files[0]);
+          formData.append('id', id);  
+          $.ajax({
+            // url: '/upload-photo',
+            url: `/admin/employee/${id}/update`,
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            
+            success: function (response) {
+              // alert('Photo uploaded successfully!');
+              $('#search-form').trigger('submit');
+            },
+            error: function (xhr) {
+              alert('Failed to upload photo.');
+            }
+          });
+        });
+      });
+    </script>
+<script>
+  $(document).ready(function () {
+    $(document).on('click', '.deletePhotoBtn', function() {
+    var id = $(this).data('id');
+    //  alert(id); 
+    if (confirm('Are you sure you want to delete this photo?')) {
+      $.ajax({
+        url: '{{route("delete.photo")}}',
+        type: 'POST',
+        data: { id: id },
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        success: function (response) {
+          // alert(response.message);
+          $('#search-form').trigger('submit');
+          // Reset the image to a default placeholder
+          // $('#uploadedPhoto').attr('src', '/storage/default.png');
+        },
+        error: function (xhr) {
+          alert('Failed to delete photo.');
+        }
+      });
+    }
+  });
+
+  // cancel
+  $(document).on('click', '#cancelEpmInfoFrom', function() {
+            // alert('ok');
+            $('#empInformation').hide();
+            $('#empDetail').show();
+        });
+
+        $(document).on('click', '#cancelPersonalInfoForm', function() {
+            // alert('ok');
+            $('#editPersonalInfo').hide();
+            $('#empPersonalDetails').show();
+        });
+
+        $(document).on('click', '#cancelJoiningInfoForm', function() {
+            // alert('ok');
+            $('#empJoiningInfo').hide();
+            $('#empJoiningDetails').show();
+        });
+
+        $(document).on('click', '#cancelPositionForm', function() {
+            // alert('ok');
+            $('#empCurrentPosition').hide();
+          $('#empPositionDetails').show();
+        });
+
+        $(document).on('click', '#cancelAddressForm', function() {
+            // alert('ok');
+            $('#empAddress').hide();
+          $('#empAddressDetails').show();
+        });
+
+
+});
+
+
+</script>
+   

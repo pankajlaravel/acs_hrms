@@ -1,12 +1,13 @@
 @include('admin.layouts.header')
+@include('admin.layouts.nav_bar')      
 <!-- Main Wrapper -->
-<div class="page">
+<div class="">
 @include('admin.layouts.side_bar')      
 <!-- /Sidebar -->
 <!-- Page Wrapper -->
 
 @yield('content')
-
+</div>
 <!-- /Page Wrapper -->
 @yield('script')
 <!--  Footer -->

@@ -1,4 +1,4 @@
-<form id="add-doc-form" enctype="multipart/form-data" class="mt-3" style="display:none;">
+<form id="add-doc-form" enctype="multipart/form-data" class="mt-3 employee-details" style="display:none;">
     @csrf
     <div class="mb-3">
         <label for="employee_id" class="form-label">Employee ID</label>
@@ -10,7 +10,7 @@
     </div>
     <div class="mb-3">
         <label for="category" class="form-label">Category</label>
-        <select name="category" class="form-select" id="category" required>
+        <select name="category" class="form-control" id="category" required>
             <option value="">Select Category</option>
             <option value="Aadhar">Aadhar</option>
             <option value="Pan">Pan</option>
@@ -24,12 +24,10 @@
         <label for="file" class="form-label">Upload File</label>
         <input type="file" name="file" class="form-control" id="file" required>
     </div>
-    <div class="mb-3">
-        <button type="button" id="cancel-file" class="btn btn-danger">Cancel File</button>
-    </div>
+    
     <div class="mb-3 form-check">
         <input type="checkbox" name="isActive" class="form-check-input" id="isActive" value="1">
-        <label class="form-check-label" for="isActive">Active</label>
+        <label class="form-check-label" for="isActive">Publish to Employee Portal</label>
     </div>
     <button type="submit" class="btn btn-primary">Save Document</button>
     <button type="button" id="cancel-form" class="btn btn-secondary">Cancel</button>

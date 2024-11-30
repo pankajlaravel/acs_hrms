@@ -1,4 +1,4 @@
-<form id="edit-doc-form" enctype="multipart/form-data" class="mt-3" style="display:none;">
+<form id="edit-doc-form" enctype="multipart/form-data" class="mt-3 employee-details" style="display:none;">
     @csrf
     <div class="mb-3">
         <label for="employee_id" class="form-label">Employee ID</label>

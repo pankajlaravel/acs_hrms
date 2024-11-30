@@ -4,92 +4,62 @@
 @section('title', 'Dashboard - HRMS Admin')
 
 @section('content')
-<div class="page-wrapper">
-    <!-- Page header -->
-    <div class="page-header d-print-none">
-      <div class="container-xl">
-        <div class="row g-2 align-items-center">
-          
+<div class="content">
    
-        
-          <!-- Page title actions -->
-          <div class="col-auto ms-auto d-print-none">
-           
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- Page body -->
-    <div class="page-body">
-      <div class="container-xl">
-        <div class="row row-deck row-cards">
-
-          <div class="col-auto ms-auto d-print-none">
-            <div class="btn-list">
-              
-              <a href="#" class="btn btn-primary d-none d-sm-inline-block" data-bs-toggle="modal" data-bs-target="#basic_info">
-                <!-- Download SVG icon from http://tabler-icons.io/i/plus -->
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 5l0 14" /><path d="M5 12l14 0" /></svg>
-              Add Employee
-              </a>
-              
-            </div>
-          </div>
-
           {{-- Search --}}
-          <div class="col-12">
-            <div class="row row-cards">
-              <div class="col-12">
-                <div class="card" >
-                  <div class="card-body">
-                    <h3 class="card-title">Start searching to see specific employee details here</h3>
-                    <div class="row row-cards">
-                      <div class="col-md-5">
-                        <form id="search-doc-info" method="post" >
-                          @csrf
-                        <div class="mb-3">
-                          <p>Search Employee</p>
-                          <div class="input-group">
-                            <span class="input-group-text" id="basic-addon1" style="border-radius: 50px 0px 0px 50px">
-                              <i class="fa fa-user" ></i> <!-- Bootstrap user icon -->
-                            </span>
-                          
-                            <input required type="search" id="search"  class="form-control custom-radius" placeholder="Search by Emp No/ Name"  />
-                            <input  type="hidden" id="search_id" name="query" class="form-control custom-radius" placeholder="Search by Emp No/ Name" />
-                       
-                            {{-- <div id="suggestions" class="suggestions" style="position: absolute; z-index: 1000; display: none; background: white; border: 1px solid #ddd;"></div> --}}
-                            <button class="btn btn-primary" type="submit" style="border-radius: 0px 50px 50px 0px">
-                              <i class="fa fa-search"></i> <!-- Bootstrap search icon -->
-                            </button>
-                          </div>
-                        </div>
-                      </form>
-                    </div>
-                  </div>
+          <div class="employee-search-container">
+            <div class="employee-search-content">
+              <h4>Start searching to see specific employee details here</h4>
+              <div class="employee-type-container">
+        
+              </div>
+              <form id="search-doc-info" method="post" >
+                @csrf
+              <div class="employee-search-bar">
+                
+                <div class="search-icon">
+                  <i class="fa fa-user"></i>
                 </div>
-                <ul class="list-group" style="display:block;position:relative;z-index:1" id="results" ></ul>
+              
+                <input required type="search" id="search"  class="search-input" placeholder="Search by Emp No/ Name"  />
+                <input  type="hidden" id="search_id" name="query" class="search-input" placeholder="Search by Emp No/ Name" />
+                <button class="search-button" type="submit">
+                <i class="fa fa-search"></i> 
+                </button>
+              </div>
+            </form>
+            
+              <!-- Suggestions List -->
+              <div class="suggestions-list" id="results" ></div>
+              <div class="suggestions-list" id="suggestionsList">
+                <!-- Suggestions will be dynamically populated -->
               </div>
             </div>
+            <div class="employee-search-image">
+              <img src="{{asset('admin/assets/img/emp-search.png')}}" alt="Search Illustration" />
+            </div>
           </div>
-        </div>
          <!-- Display area for document info -->
         <div id="doc-info">
             
         </div>
         <div id="document-content"></div>
-        </div>
+      
         
-        <button id="add-doc-button" class="mb-4 btn btn-success" style="display:none;">Add Document</button>
     <!-- Document form to add a new document (initially hidden) -->
     
 
     @include('admin.employee.document.editDoc')
     @include('admin.employee.document.addDoc')
     <!-- Message area for success/error messages -->
-    <div id="message" class="mt-3"></div>
-      </div>
-    </div>
+    <div class="mt-4 filter-bar">
+        <button id="add-doc-button" class="add-documents-btn" style="display:none;">Add Document</button>
+    </div>  
+    <div id="message" class="mt-3 "></div>
     @include('admin.employee.document.viewDoc')
+    
+</div>
+   
   @endsection
   @section('script')
   <script>
@@ -110,25 +80,28 @@
                     data.empDoc.forEach(function(doc) {
                         documentList +=
                          `
-                        <div class="col-md-4">
-                                    <div class="mb-3 card">
-                                        <div class="card-header">
-                                            <h5 class="card-title">${doc.doc_name}</h5>
-                                        </div>
-                                        <div class="card-body">
-                                            <p><strong>Date:</strong> ${doc.formatted_date || 'N/A'}</p>
-                                            <p><strong>Description:</strong> ${doc.description || 'N/A'}</p>
-                                            <p><strong>Category:</strong> ${doc.category || 'N/A'}</p>
-                                            <p><strong>Status:</strong> ${doc.isActive == 1 ? 'Active' : 'Inactive'}</p>
-                                            ${doc.file ? `<button class="btn btn-warning view-button" data-image-url="/storage/${doc.file}"><i class="fa fa-eye" aria-hidden="true"></i></button>` : ''}
-                                            ${doc.id ? `<button class="btn btn-success edit-button" data-id="${doc.id}"><i class="fa fa-edit" aria-hidden="true"></i></button>` : ''}
-                                            ${doc.id ? `<button class="btn btn-danger delete-button" data-id="${doc.id}"><i class="fa fa-trash-o" aria-hidden="true"></i></button>` : ''}
-                                            ${doc.file ? `<a href="/storage/${doc.file}" download="${doc.file}" class="btn btn-primary"> <i class="fa fa-download" aria-hidden="true"></i> </a>` : ''}
-                                            
-                                        </div>
-                                    </div>
-                                </div>
-                        `;
+                      <div class="document-card">
+      <div class="document-icon">
+        📄
+      </div>
+      <div class="document-content">
+        <div class="document-title">
+          ${doc.doc_name}
+          <span class="document-status">${doc.isActive == 1 ? 'Published' : 'Inactive'}</span>
+        </div>
+        <div class="document-details">
+          ${doc.formatted_date || 'N/A'}
+          <br>
+          <a href="#">${doc.file}</a>
+          ${doc.file ? `<a href="/storage/${doc.file}" download="${doc.file}" class="btn "> <i class="fa fa-download" aria-hidden="true"></i> </a>` : ''}
+          ${doc.file ? `<button class="btn view-button" data-image-url="/storage/${doc.file}"><i class="fa fa-eye" aria-hidden="true"></i></button>` : ''}
+        </div>
+      </div>
+      <div class="document-actions">
+        ${doc.id ? `<button class="btn edit-button" data-id="${doc.id}"><i class="fa fa-edit" aria-hidden="true"></i></button>` : ''}
+        ${doc.id ? `<button class="btn delete-button" data-id="${doc.id}"><i class="fa fa-trash" aria-hidden="true"></i></button>` : ''}
+      </div>
+    </div> `;
                     });
                     $('#message').html(documentList); 
                     // $('#message').html(`<p>Document Found: ${data.empDoc.doc_name}</p>`);
@@ -209,6 +182,7 @@
         // Trigger image view within the same tab
             $(document).on('click', '.view-button', function() {
             const imageUrl = $(this).data('image-url');
+            // alert(imageUrl);
             const fileExtension = imageUrl.split('.').pop().toLowerCase();
             console.log(fileExtension);
             let viewerContent = '';
@@ -276,7 +250,7 @@
                 $('#description').val(data.document.description);
                 // $('#isActive').val(data.document.isActive);
                 $('#isActive').prop('checked', data.document.isActive == 1);
-                console.log(data.document);
+                // console.log(data.document);
                 if (data.document.file) {
                         $('#fileName').text(data.document.file); // Show the file name
                         $('#deleteFile').show(); // Show the delete icon

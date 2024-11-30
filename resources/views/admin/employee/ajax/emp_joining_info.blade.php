@@ -8,18 +8,20 @@
 // alert('employeeId');
 $(document).on('click', '.editJoiningInfo', function() {
   const employeeId = $(this).data('id');
+  $('#empJoiningInfo').show();
+  $('#empJoiningDetails').hide();
 //   alert(employeeId);
   $.get('/admin/employee/edit/' + employeeId, function (data) {
           $('.employeeId').val(data.id);
-          $('#joining_Date').val(data.joining_Date);
-          $('#join_confrimation_date').val(data.join_confrimation_date);
-          $('#joining_status').val(data.joining_status);
-          $('#probation_period').val(data.probation_period);
-          $('#notice_period').val(data.notice_period);
-          $('#current_company_experience').val(data.current_company_experience);
-          $('#pre_company_experiecne').val(data.pre_company_experiecne);
-          $('#total_experience').val(data.total_experience);
-          $('#referred_by').val(data.referred_by);
+          $('.joining_Date').val(data.joining_Date);
+          $('.join_confrimation_date').val(data.join_confrimation_date);
+          $('.joining_status').val(data.joining_status);
+          $('.probation_period').val(data.probation_period);
+          $('.notice_period').val(data.notice_period);
+          $('.current_company_experience').val(data.current_company_experience);
+          $('.pre_company_experiecne').val(data.pre_company_experiecne);
+          $('.total_experience').val(data.total_experience);
+          $('.referred_by').val(data.referred_by);
           
        
 
@@ -43,7 +45,8 @@ $('#employeeJoiningInfoEditForm').on('submit', function (e) {
       
       success: function(response) {
           // Hide modal and show success alert
-          $('#editJoiningInfo').modal('hide');
+          $('#empJoiningInfo').hide();
+            $('#empJoiningDetails').show();
           Swal.fire({
               icon: 'success',
               title: 'Record updated successfully',

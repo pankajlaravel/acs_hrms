@@ -8,20 +8,22 @@
 // alert('employeeId');
 $(document).on('click', '.editPresentInfo', function() {
   const employeeId = $(this).data('id');
+  $('#empAddress').show();
+  $('#empAddressDetails').hide();
 //   alert(employeeId);
   $.get('/admin/employee/edit/' + employeeId, function (data) {
           $('.employeeId').val(data.id);
-          $('#address').val(data.address);
-          $('#city').val(data.city);
-          $('#state').val(data.state);
-          $('#country').val(data.country);
-          $('#pin').val(data.pin);
-          $('#phone1').val(data.phone1);
-          $('#phone2').val(data.phone2);
-          $('#extension').val(data.extension);
-          $('#fax').val(data.fax);
-          $('#phone').val(data.phone);
-          $('#personal_email ').val(data.personal_email );
+          $('.address').val(data.address);
+          $('.city').val(data.city);
+          $('.state').val(data.state);
+          $('.country').val(data.country);
+          $('.pin').val(data.pin);
+          $('.phone1').val(data.phone1);
+          $('.phone2').val(data.phone2);
+          $('.extension').val(data.extension);
+          $('.fax').val(data.fax);
+          $('.phone').val(data.phone);
+          $('.personal_email ').val(data.personal_email );
           
        
 
@@ -45,7 +47,8 @@ $('#employeePresentAddressEditForm').on('submit', function (e) {
       
       success: function(response) {
           // Hide modal and show success alert
-          $('#editPresentInfo').modal('hide');
+          $('#empAddress').hide();
+          $('#empAddressDetails').show();
           Swal.fire({
               icon: 'success',
               title: 'Record updated successfully',

@@ -4,92 +4,58 @@
 @section('title', 'Dashboard - HRMS Admin')
 
 @section('content')
-<div class="page-wrapper">
+<div class="content">
     <!-- Page header -->
-    <div class="page-header d-print-none">
-      <div class="container-xl">
-        <div class="row g-2 align-items-center">
-          
-   
-        
-          <!-- Page title actions -->
-          <div class="col-auto ms-auto d-print-none">
-           
+    <div class="employee-search-container">
+        <div class="employee-search-content">
+          <h4>Start searching to see specific employee details here</h4>
+          <div class="employee-type-container">
+  
           </div>
+          <form id="search-bank-info" method="post" >
+            @csrf
+          <div class="employee-search-bar">
+            
+            <div class="search-icon">
+              <i class="fa fa-user"></i>
+            </div>
+          
+            <input required type="search" id="search"  class="search-input" placeholder="Search by Emp No/ Name"  />
+            <input  type="hidden" id="search_id" name="query" class="search-input" placeholder="Search by Emp No/ Name" />
+            <button class="search-button" type="submit">
+            <i class="fa fa-search"></i> 
+            </button>
+          </div>
+        </form>
+        
+          <!-- Suggestions List -->
+          <div class="suggestions-list" id="results" ></div>
+          <div class="suggestions-list" id="suggestionsList">
+            <!-- Suggestions will be dynamically populated -->
+          </div>
+        </div>
+        <div class="employee-search-image">
+          <img src="{{asset('admin/assets/img/emp-search.png')}}" alt="Search Illustration" />
         </div>
       </div>
-    </div>
-    <!-- Page body -->
-    <div class="page-body">
-      <div class="container-xl">
-        <div class="row row-deck row-cards">
-
-          <div class="col-auto ms-auto d-print-none">
-            <div class="btn-list">
               
-              <a href="#" class="btn btn-primary d-none d-sm-inline-block" data-bs-toggle="modal" data-bs-target="#basic_info">
-                <!-- Download SVG icon from http://tabler-icons.io/i/plus -->
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 5l0 14" /><path d="M5 12l14 0" /></svg>
-              Add Employee
-              </a>
-              
-            </div>
-          </div>
-
-          {{-- Search --}}
-          <div class="col-12">
-            <div class="row row-cards">
-              <div class="col-12">
-                <div class="card" >
-                  <div class="card-body">
-                    <h3 class="card-title">Start searching to see specific employee details here</h3>
-                    <div class="row row-cards">
-                      <div class="col-md-5">
-                        <form id="search-bank-info" method="post" >
-                          @csrf
-                        <div class="mb-3">
-                          <p>Search Employee</p>
-                          <div class="input-group">
-                            <span class="input-group-text" id="basic-addon1" style="border-radius: 50px 0px 0px 50px">
-                              <i class="fa fa-user" ></i> <!-- Bootstrap user icon -->
-                            </span>
-                          
-                            <input required type="search" id="search"  class="form-control custom-radius" placeholder="Search by Emp No/ Name"  />
-                            <input  type="hidden" id="search_id" name="query" class="form-control custom-radius" placeholder="Search by Emp No/ Name" />
-                       
-                            {{-- <div id="suggestions" class="suggestions" style="position: absolute; z-index: 1000; display: none; background: white; border: 1px solid #ddd;"></div> --}}
-                            <button class="btn btn-primary" type="submit" style="border-radius: 0px 50px 50px 0px">
-                              <i class="fa fa-search"></i> <!-- Bootstrap search icon -->
-                            </button>
-                          </div>
-                        </div>
-                      </form>
-                    </div>
-                  </div>
-                </div>
-                <ul class="list-group" style="display:block;position:relative;z-index:1" id="results" ></ul>
-              </div>
-            </div>
-          </div>
-        </div>
+     
+         {{-- Bank  --}}
+       @include('admin.employee.forms.empBankInfo')
+      <div class="employee-details" id="search-results" style="display: none;">
           
-          {{-- Bank  --}}
-          <div id="search-results" style="display: none;">
-          
-        </div>
-        {{-- ESI --}}
-        <div id="esiSection" style="display: none;">
-          
-        </div>
-        <div id="pfSection" style="display: none;">
-          
-        </div>
-        
-        </div>
       </div>
-    </div>
-    
- @include('admin.employee.pages.empBankForm')
+      {{-- ESI --}}
+      <div class="employee-details" id="esiSection" style="display: none;">
+        
+      </div>
+      <div class="employee-details" id="pfSection" style="display: none;">
+        
+      </div>
+      
+        </div>
+     
+ 
   @endsection
   @section('script')
   <script>
@@ -101,7 +67,8 @@
     });
 
     $(document).on('click', '.editBankBtn', function() {
-        $('#spinner').show();
+        $('#empBankInfo').show();
+        $('#search-results').hide();
         const bankId = $(this).data('id');
         // alert(bankId);
         $.get('/admin/bank/detail/edit/' + bankId, function (data) {
@@ -110,6 +77,7 @@
                 $('#bankName').val(data.bankName);
                 $('#branchName').val(data.branchName);
                 $('.account_no').val(data.account_no);
+                $('.account_type').val(data.account_type);
                 $('.ifsc').val(data.ifsc);
                 $('.payment_type').val(data.payment_type);
                 $('.account_holder_name').val(data.account_holder_name);
@@ -142,6 +110,13 @@
             });
     });
 
+    $(document).on('click', '.addBankInfo', function() {
+        $('#addBankInfo').show();
+        $('#search-results').hide();
+        const bankId = $(this).data('id');
+       
+    });
+
     $('#edit_employee_bank_details_form').on('submit', function (e) {
      e.preventDefault();
      
@@ -156,7 +131,8 @@
     data: formData,// Assuming you have a form with the ID employeeForm
 
     success: function(response) {
-        $('#edit_employee').modal('hide');
+        $('#empBankInfo').hide();
+        $('#search-results').show();
         // alert(response.success);
         Swal.fire({
         icon: 'success',
@@ -205,13 +181,13 @@
         $('#original').hide(); // Hide original content
 
         resultsHtml += `
-            <div class="col-12">
+            <div class="">
                 <div class="row row-cards">
-                    <div class="col-12">
-                        <div class="card">
+                    <div class="">
+                       
                             <div class="card-body">
                                 <h3 class="card-title">Bank Account
-                                    <a href="#" class="btn editBankBtn" data-id="${data.bankRecord.id}" data-bs-toggle="modal" data-bs-target="#edit_employee_bank_details">
+                                    <a href="javascript:void(0)" class="btn editBankBtn" data-id="${data.bankRecord.id}">
                                         <i class="fa fa-pencil"></i>
                                     </a>
                                 </h3>
@@ -262,20 +238,20 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        
                     </div>
                 </div>
             </div>`;
     } else {
         // No bank record section (placeholder content)
         resultsHtml += `
-            <div class="col-12">
+            <div class="">
                 <div class="row row-cards">
-                    <div class="col-12">
-                        <div class="card">
+                    <div class="">
+                        <div class="">
                             <div class="card-body">
                                 <h3 class="card-title">Bank Account
-                                    <a href="#" class="btn editEmp" data-id="--" data-bs-toggle="modal" data-bs-target="#add_emp_bank_details">
+                                    <a href="javascript:void(0)" class="btn editEmp addBankInfo">
                                         <i class="fa fa-pencil"></i>
                                     </a>
                                 </h3>
@@ -335,10 +311,10 @@
     // ESI Section
     if (data.esi) {
         resultESI += `
-            <div class="col-12">
+            <div class="">
                             <div class="row row-cards">
-                                <div class="col-12">
-                                    <div class="card">
+                                <div class="">
+                                    <div class="">
                                         <div class="card-body">
                                             <h3 class="card-title">ESI Account</h3>
                                             <div class="row row-cards">
@@ -363,10 +339,10 @@
                         </div>`;
     }else{
         resultESI += `
-            <div class="col-12">
+            <div class="">
                 <div class="row row-cards">
-                    <div class="col-12">
-                        <div class="card">
+                    <div class="">
+                        <div class="">
                             <div class="card-body">
                                 <h3 class="card-title">ESI Account</h3>
                                 <div class="row row-cards">
@@ -398,10 +374,10 @@
     const isExistingMemberEPSChecked = (data.pf.exits_eps === 'true') ? 'checked' : '';
     const allowEPFExcessChecked = (data.pf.allow_epf === 'true') ? 'checked' : '';
     const allowEPSExcessChecked = (data.pf.allow_eps === 'true') ? 'checked' : '';
-    resultPF += `<div class="col-12">
+    resultPF += `<div class="">
         <div class="row row-cards">
-            <div class="col-12">
-                <div class="card">
+            <div class="">
+                <div class="">
                     <div class="card-body">
                         <h3 class="card-title">Provident Fund Account</h3>
                         <div class="row row-cards">
@@ -443,10 +419,10 @@
         </div>
     </div>`;
 }else{
-       resultPF += `<div class="col-12">
+       resultPF += `<div class="">
     <div class="row row-cards">
-        <div class="col-12">
-            <div class="card">
+        <div class="">
+            <div class="">
                 <div class="card-body">
                     <h3 class="card-title">
                         Provident Fund Account
@@ -510,13 +486,7 @@
         $(document).ready(function() {
             $('#add_emp_bank_details_form').on('submit', function(e) {
             e.preventDefault();
-        let isValid = true;
-        $('.error').text(''); // Clear existing errors
 
-        // Client-side validation example
-        
-        
-        $(".save").text('Saving...')
             $.ajax({
                 url: '{{ route("employees.empBankDetail")}}',
                 type: 'POST',
@@ -525,7 +495,8 @@
                 contentType: false,
                 success: function(response) {
                     // alert(response.success);
-                    $('#add_emp_bank_details').modal('hide');
+                    $('#addBankInfo').hide();
+                    $('#search-results').show();
                      Swal.fire({
                         icon: 'success',
                         title: 'Inserted Successfully',
@@ -620,6 +591,19 @@ $(document).on('click', '#cancelPfBtn', function() {
     resetPFEditMode();  // Return to display mode without saving
 });
 
+
+$(document).on('click', '#cancelBankForm1', function() {
+            // alert('ok');
+            $('#addBankInfo').hide();
+            $('#search-results').show();
+        });
+        
+        $(document).on('click', '#cancelBankForm2', function() {
+            // alert('ok');
+            $('#empBankInfo').hide();
+        $('#search-results').show();
+        });   
+
 // Function to reset to display mode
 function resetEsiEditMode() {
     $('#esiCheckbox').prop('checked', false);
@@ -705,6 +689,7 @@ $(document).on('click', '#savePfBtn', function() {
             }
         // $('#search-bank-info').trigger('submit'); 
     });
+
 });
 </script>
 

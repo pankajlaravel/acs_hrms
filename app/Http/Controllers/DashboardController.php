@@ -25,12 +25,15 @@ class DashboardController extends Controller
         $currentHour = Carbon::now('Asia/Kolkata')->format('H');
         if ($currentHour < 12) {
             $greeting = "Good Morning";
+            $image = asset("admin/assets/img/mornig_illustration.png");
         } elseif ($currentHour < 18) {
             $greeting = "Good Afternoon";
+            $image = asset("admin/assets/img/afternoon_illustration.png");
         } else {
             $greeting = "Good Evening";
+            $image = asset("admin/assets/img/evening_illustration.png");
         }
-        // dd($greeting);
+        // dd($image);
         $userData = $employee->map(function ($user) {
             return [
                 'firstName' => $user->firstName,   // or any other fields you need
@@ -55,6 +58,7 @@ class DashboardController extends Controller
                        'monthlyHeadCount',
                        'userData',
                        'projects',
+                       'image'
             
         ));
     }

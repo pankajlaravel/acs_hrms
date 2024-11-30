@@ -430,7 +430,7 @@
               <div class="mb-3">
                 <label class="mt-2 form-label">Department<span class="text-danger">*</span></label>
                 {{-- <input name="city" id="department_select" class="form-control" type="text" > --}}
-                <select name="department" id="department_select" class="form-control">
+                <select name="department_id" id="department_select" class="form-control">
                   @foreach ($department as $val)
                     
                   <option value="{{$val->id}}">{{$val->name}}</option>
